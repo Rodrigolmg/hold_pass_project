@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:hold_pass_en/components/pass_textfield.dart';
 import 'package:hold_pass_en/components/pass_type_list.dart';
+import 'package:hold_pass_en/provider/pass_provider.dart';
+import 'package:provider/provider.dart';
 
 class PassRegister extends StatefulWidget {
   const PassRegister({Key? key}) : super(key: key);
@@ -44,12 +46,15 @@ class _PassRegisterState extends State<PassRegister> {
             ),
             SizedBox(
               width: width,
-              child: PassTextField(
-                label: 'Item Name',
-                suffixWidget: IconButton(
-                  onPressed: (){},
-                  icon: const Icon(Icons.question_mark_rounded),
-                  splashColor: Colors.transparent,
+              child: Consumer<PassProvider>(
+                builder: (context, passProvider, _) => PassTextField(
+                  label: 'Item Name',
+                  suffixWidget: IconButton(
+                    onPressed: (){},
+                    icon: const Icon(Icons.question_mark_rounded),
+                    splashColor: Colors.transparent,
+                  ),
+                  onChange: passProvider.setItemName,
                 ),
               ),
             ),

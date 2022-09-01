@@ -28,7 +28,7 @@ class AppDatabase {
   Future _openDatabase() async {
 
     final appDocumentDir = await getApplicationDocumentsDirectory();
-    final dbPath = join(appDocumentDir.path, 'passwords.db');
+    final dbPath = join(appDocumentDir.path, 'hold.db');
     final database = await databaseFactoryIo.openDatabase(dbPath);
     _dbOpenCompleter?.complete(database);
   }

@@ -17,6 +17,7 @@ class Password {
   final String? password;
   final String? numId;
   final String? pin;
+  final bool? isAuth;
 
   Password({
     this.id,
@@ -27,7 +28,8 @@ class Password {
     this.nickname,
     @required this.password,
     this.numId,
-    this.pin
+    this.pin,
+    this.isAuth
   });
 
   factory Password.fromJson(Map<String, dynamic> json)

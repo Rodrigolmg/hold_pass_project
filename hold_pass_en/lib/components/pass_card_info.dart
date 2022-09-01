@@ -76,16 +76,28 @@ class _PassCardInfoState extends State<PassCardInfo> {
         ],
       ),
       actions: [
-        TextButton(onPressed: (){
-          Navigator.of(context).pop();
-        },
-            child: const Text(
-              'Back',
-              style: TextStyle(
-                fontWeight: FontWeight.bold
-              ),
-            )
-        )
+        TextButton(
+          onPressed: (){
+            Navigator.of(context).pop();
+          },
+          child: const Text(
+            'Back',
+            style: TextStyle(
+              fontWeight: FontWeight.bold
+            ),
+          )
+        ),
+        TextButton(
+          onPressed: (){
+            Navigator.of(context).pop();
+          },
+          child: const Text(
+            'Edit',
+            style: TextStyle(
+              fontWeight: FontWeight.bold
+            ),
+          )
+        ),
       ],
     );
   }
