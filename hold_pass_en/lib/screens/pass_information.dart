@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:hold_pass_en/screens/information/pass_app_info.dart';
+import 'package:hold_pass_en/screens/information/pass_email_info.dart';
+import 'package:hold_pass_en/screens/information/pass_game_info.dart';
+import 'package:hold_pass_en/screens/information/pass_other_info.dart';
+import 'package:hold_pass_en/screens/information/pass_website_info.dart';
 
 class PassInformation extends StatefulWidget {
   const PassInformation({Key? key}) : super(key: key);
@@ -8,11 +13,79 @@ class PassInformation extends StatefulWidget {
 }
 
 class _PassInformationState extends State<PassInformation> {
+
+  final PageController _pageController = PageController(initialPage: 0);
+
+  List<Widget> _getPages() => [
+    const PassEmailInfo(),
+    const PassWebsiteInfo(),
+    const PassAppInfo(),
+    const PassGameInfo(),
+    const PassOtherInfo(),
+  ];
+
+  _onPageChange(index){
+    setState(() {
+      _pageController.animateToPage(
+        index,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.decelerate
+      );
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    return const Center(
-      child: Text('Password information'),
+    return DefaultTabController(
+      length: 5,
+      child: Scaffold(
+        appBar: TabBar(
+          unselectedLabelColor: Colors.brown,
+          indicatorColor: Colors.orangeAccent,
+          onTap: _onPageChange,
+          tabs: const [
+            Tab(
+              icon: Icon(
+                Icons.alternate_email,
+                color: Colors.black,
+              ),
+            ),
+            Tab(
+              icon: Icon(
+                Icons.http,
+                color: Colors.black,
+              ),
+            ),
+            Tab(
+              icon: Icon(
+                Icons.phone_android,
+                color: Colors.black,
+              ),
+            ),
+            Tab(
+              icon: Icon(
+                Icons.videogame_asset,
+                color: Colors.black,
+              ),
+            ),
+            Tab(
+              icon: Icon(
+                Icons.question_mark,
+                color: Colors.black,
+              ),
+            ),
+          ],
+        ),
+        body: PageView.builder(
+          controller: _pageController,
+          physics: const NeverScrollableScrollPhysics(),
+          itemCount: _getPages().length,
+          itemBuilder: (_, i) => _getPages()[i],
+        ),
+      )
     );
+
+
   }
 }
 

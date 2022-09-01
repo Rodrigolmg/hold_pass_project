@@ -51,7 +51,7 @@ class _PassTypeListState extends State<PassTypeList> {
                     SizedBox(
                       width: width * .08,
                     ),
-                    const Text('Email'),
+                    const Text('E-mail'),
                   ],
                 ),
               ),

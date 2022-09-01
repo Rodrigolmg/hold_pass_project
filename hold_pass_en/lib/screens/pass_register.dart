@@ -11,7 +11,7 @@ class PassRegister extends StatefulWidget {
 
 class _PassRegisterState extends State<PassRegister> {
 
-  bool _obscureText = false;
+  bool _obscureText = true;
 
   @override
   Widget build(BuildContext context) {
@@ -97,6 +97,15 @@ class _PassRegisterState extends State<PassRegister> {
               width: width,
               child: PassTextField(
                 label: 'ID',
+              ),
+            ),
+            SizedBox(
+              height: height * .02,
+            ),
+            SizedBox(
+              width: width,
+              child: PassTextField(
+                label: 'Pin',
               ),
             ),
             SizedBox(

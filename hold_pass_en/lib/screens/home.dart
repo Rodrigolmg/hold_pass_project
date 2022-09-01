@@ -46,7 +46,7 @@ class _HomeState extends State<Home> {
                       icon: Icon(
                         Icons.app_registration_outlined,
                       ),
-                      label: 'Register pass'
+                      label: 'Register'
                   ),
                   BottomNavigationBarItem(
                       icon: Icon(Icons.info_outline),
@@ -60,9 +60,11 @@ class _HomeState extends State<Home> {
           floatingActionButton: Padding(
             padding: const EdgeInsets.all(8.0),
             child: isKeyboardOpened ? null : FloatingActionButton(
-              onPressed: _currentIndex == 0 ? (){} : null,
-              backgroundColor: _currentIndex == 0 ? Colors.orangeAccent : Colors.grey,
-              child: const Icon(Icons.save),
+              onPressed: (){},
+              backgroundColor: Colors.orangeAccent,
+              child: Icon(
+                _currentIndex == 0 ? Icons.save : Icons.upload_rounded
+              ),
             ),
           ),
         )
