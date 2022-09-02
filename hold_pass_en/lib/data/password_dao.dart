@@ -5,7 +5,7 @@ import 'package:sembast/sembast.dart';
 
 class PasswordDao {
 
-  static const String passwordStore = 'passwords';
+  static const String passwordStore = 'password_store';
   final _passwordStore = intMapStoreFactory.store(passwordStore);
 
   Future<Database> get _db async => await AppDatabase.instance.database;
@@ -15,17 +15,18 @@ class PasswordDao {
   }
 
   Future update(Password pass) async {
-    final finder = Finder(filter: Filter.byKey(pass.id));
-    await _passwordStore.update(await _db, pass.toJson(), finder: finder);
+    // final finder = Finder(filter: Filter.equals('id', ));
+    await _passwordStore.record(pass.id).update(await _db, pass.toJson());
   }
 
   Future delete(Password pass) async {
-    final finder = Finder(filter: Filter.byKey(pass.id));
-    await _passwordStore.delete(await _db, finder: finder);
+    // final finder = Finder(filter: Filter.equals('id', pass.id));
+    await _passwordStore.record(pass.id).delete(await _db);
   }
 
   Future<List<Password>> getPasswords(PassType type) async {
-    final finder = Finder(filter: Filter.equals('pass-type', type.valueNum),
+
+    final finder = Finder(filter: Filter.equals('passType', type.valueNum),
         sortOrders: [SortOrder('id')]);
 
     final recordSnapshots =

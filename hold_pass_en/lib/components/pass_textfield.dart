@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:hold_pass_en/provider/pass_provider.dart';
-import 'package:provider/provider.dart';
 
 // ignore: must_be_immutable
 class PassTextField extends StatelessWidget {
@@ -9,12 +7,16 @@ class PassTextField extends StatelessWidget {
   String? label;
   bool obscureText;
   Function(String)? onChange;
+  TextInputType keyboardType;
+  String? Function(String?)? validator;
 
   PassTextField({Key? key,
     this.suffixWidget,
     @required this.label,
     this.obscureText = false,
-    @required this.onChange
+    @required this.onChange,
+    this.keyboardType = TextInputType.text,
+    this.validator
   }) : super(key: key);
 
   @override
@@ -31,8 +33,10 @@ class PassTextField extends StatelessWidget {
             ),
           ),
         ),
-        TextField(
+        TextFormField(
           onChanged: onChange,
+          keyboardType: keyboardType,
+          validator: validator ?? (val) => null,
           obscureText: obscureText,
           cursorColor: Colors.orangeAccent,
           decoration: InputDecoration(

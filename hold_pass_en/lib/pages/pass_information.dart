@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:hold_pass_en/screens/information/pass_app_info.dart';
-import 'package:hold_pass_en/screens/information/pass_email_info.dart';
-import 'package:hold_pass_en/screens/information/pass_game_info.dart';
-import 'package:hold_pass_en/screens/information/pass_other_info.dart';
-import 'package:hold_pass_en/screens/information/pass_website_info.dart';
+import 'package:hold_pass_en/provider/pass_provider.dart';
+import 'package:hold_pass_en/pages/information/pass_app_info.dart';
+import 'package:hold_pass_en/pages/information/pass_email_info.dart';
+import 'package:hold_pass_en/pages/information/pass_game_info.dart';
+import 'package:hold_pass_en/pages/information/pass_other_info.dart';
+import 'package:hold_pass_en/pages/information/pass_website_info.dart';
+import 'package:hold_pass_en/util/pass_type.dart';
+import 'package:provider/provider.dart';
 
 class PassInformation extends StatefulWidget {
   const PassInformation({Key? key}) : super(key: key);
@@ -23,6 +26,14 @@ class _PassInformationState extends State<PassInformation> {
     const PassGameInfo(),
     const PassOtherInfo(),
   ];
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    PassProvider passProvider =
+      Provider.of<PassProvider>(context, listen: false);
+    passProvider.reloadPassList(PassType.email);
+  }
 
   _onPageChange(index){
     setState(() {

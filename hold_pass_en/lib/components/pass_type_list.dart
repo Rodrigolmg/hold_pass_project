@@ -3,17 +3,8 @@ import 'package:hold_pass_en/provider/pass_provider.dart';
 import 'package:hold_pass_en/util/pass_type.dart';
 import 'package:provider/provider.dart';
 
-class PassTypeList extends StatefulWidget {
+class PassTypeList extends StatelessWidget {
   const PassTypeList({Key? key}) : super(key: key);
-
-  @override
-  State<PassTypeList> createState() => _PassTypeListState();
-}
-
-class _PassTypeListState extends State<PassTypeList> {
-
-  PassType _valueType = PassType.email;
-
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +30,7 @@ class _PassTypeListState extends State<PassTypeList> {
                   height: .8,
                   color: Colors.orangeAccent,
                 ),
-                value: _valueType,
+                value: passProvider.getPassType,
                 isExpanded: true,
                 icon: const Icon(
                   Icons.arrow_downward,
@@ -110,11 +101,7 @@ class _PassTypeListState extends State<PassTypeList> {
                     ),
                   )
                 ],
-                onChanged: (PassType? type) {
-                  setState(() {
-                    _valueType = type!;
-                  });
-                }
+                onChanged: passProvider.setType
             ),
           ),
         )

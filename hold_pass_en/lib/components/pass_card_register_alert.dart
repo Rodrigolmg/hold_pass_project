@@ -2,15 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:hold_pass_en/components/pass_info_tile.dart';
 import 'package:hold_pass_en/models/password.dart';
 import 'package:hold_pass_en/provider/pass_provider.dart';
+import 'package:hold_pass_en/util/pass_type_name.dart';
 import 'package:hold_pass_en/util/string_extension.dart';
 import 'package:provider/provider.dart';
 
-class PassCardInfo extends StatelessWidget {
+class PassCardRegisterAlert extends StatelessWidget {
+  
+  final Password? passToRegister;
+  final bool isRegister;
 
-  final Password? passwordModel;
-
-  const PassCardInfo({
-    @required this.passwordModel,
+  const PassCardRegisterAlert({
+    @required this.passToRegister,
+    this.isRegister = true,
     Key? key
   }) : super(key: key);
 
@@ -19,7 +22,7 @@ class PassCardInfo extends StatelessWidget {
 
     PassProvider passProvider =
       Provider.of<PassProvider>(context, listen: false);
-
+    
     return AlertDialog(
       elevation: 8,
       content: Column(
@@ -27,74 +30,84 @@ class PassCardInfo extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
+          const Center(child: Text('Is password info correct?')),
+          const SizedBox(
+            height: 25,
+          ),
           PassInfoTile(
-            label: 'Item name:',
-            detail: passwordModel!.itemNamePass!.capitalize()
+              label: 'Item type:',
+              detail: PassTypeName.getTypeName(passToRegister!.passType!).capitalize()
           ),
           const SizedBox(
             height: .5,
           ),
           PassInfoTile(
-            label: 'E-mail:',
-            detail: passwordModel!.email
+              label: 'Item name:',
+              detail: passToRegister!.itemNamePass!.capitalize()
           ),
           const SizedBox(
             height: .5,
           ),
           PassInfoTile(
-            label: 'Username:',
-            detail: passwordModel!.username
+              label: 'E-mail:',
+              detail: passToRegister!.email
           ),
           const SizedBox(
             height: .5,
           ),
           PassInfoTile(
-            label: 'Nickname:',
-            detail: passwordModel!.nickname
+              label: 'Username:',
+              detail: passToRegister!.username
           ),
           const SizedBox(
             height: .5,
           ),
           PassInfoTile(
-            label: 'ID:',
-            detail: passwordModel!.numId
+              label: 'Nickname:',
+              detail: passToRegister!.nickname
           ),
           const SizedBox(
             height: .5,
           ),
           PassInfoTile(
-            label: 'Pin:',
-            detail: passwordModel!.pin
+              label: 'ID:',
+              detail: passToRegister!.numId
           ),
           const SizedBox(
             height: .5,
           ),
           PassInfoTile(
-            label: 'Password:',
-            detail: passwordModel!.password
+              label: 'Pin:',
+              detail: passToRegister!.pin
+          ),
+          const SizedBox(
+            height: .5,
+          ),
+          PassInfoTile(
+              label: 'Password:',
+              detail: passToRegister!.password
           ),
         ],
       ),
       actions: [
         TextButton(
-          onPressed: (){
-            Navigator.of(context).pop();
-          },
-          child: const Text(
-            'Back',
-            style: TextStyle(
-              fontWeight: FontWeight.bold
-            ),
-          )
+            onPressed: (){
+              Navigator.of(context).pop();
+            },
+            child: const Text(
+              'No, I\'ll edit it',
+              style: TextStyle(
+                  fontWeight: FontWeight.bold
+              ),
+            )
         ),
         TextButton(
             onPressed: (){
-              passProvider.setPasswordToEdit(passwordModel!);
+              passProvider.registerPassword();
               Navigator.of(context).pop();
-              passProvider.animateToPage(0);
             },
             child: const Text(
-              'Edit',
+              'Yes, register',
               style: TextStyle(
                   fontWeight: FontWeight.bold
               ),
