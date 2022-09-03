@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 // ignore: must_be_immutable
 class PassTextField extends StatelessWidget {
@@ -9,6 +10,7 @@ class PassTextField extends StatelessWidget {
   Function(String)? onChange;
   TextInputType keyboardType;
   String? Function(String?)? validator;
+  List<TextInputFormatter>? inputFormatters;
 
   PassTextField({Key? key,
     this.suffixWidget,
@@ -16,7 +18,8 @@ class PassTextField extends StatelessWidget {
     this.obscureText = false,
     @required this.onChange,
     this.keyboardType = TextInputType.text,
-    this.validator
+    this.validator,
+    this.inputFormatters
   }) : super(key: key);
 
   @override
@@ -39,6 +42,7 @@ class PassTextField extends StatelessWidget {
           validator: validator ?? (val) => null,
           obscureText: obscureText,
           cursorColor: Colors.orangeAccent,
+          inputFormatters: inputFormatters,
           decoration: InputDecoration(
             border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8)

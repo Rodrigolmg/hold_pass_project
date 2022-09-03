@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hold_pass_en/components/pass_card_info.dart';
 import 'package:hold_pass_en/components/pass_card_smry.dart';
-import 'package:hold_pass_en/models/password.dart';
 import 'package:hold_pass_en/provider/pass_provider.dart';
-import 'package:hold_pass_en/util/pass_type.dart';
 import 'package:provider/provider.dart';
 
 class PassEmailInfo extends StatelessWidget {

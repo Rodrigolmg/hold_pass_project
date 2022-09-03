@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hold_pass_en/pages/splash.dart';
 import 'package:hold_pass_en/provider/pass_provider.dart';
 import 'package:hold_pass_en/pages/home.dart';
 import 'package:provider/provider.dart';
@@ -28,7 +29,7 @@ class MyApp extends StatelessWidget {
           primary: Colors.orangeAccent
         )
       ),
-      home: const Home(),
+      home: const Splash(),
     );
   }
 }
