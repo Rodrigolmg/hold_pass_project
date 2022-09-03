@@ -24,7 +24,7 @@ class _PassRegisterState extends State<PassRegister> {
     showGeneralDialog(
       context: context,
       pageBuilder: (context, a1, a2) => Container(),
-      transitionDuration: const Duration(milliseconds: 550),
+      transitionDuration: const Duration(milliseconds: 250),
       transitionBuilder: (context, a1, a2, child) {
         var curve = Curves.easeInQuad.transform(a1.value);
         return Transform.scale(

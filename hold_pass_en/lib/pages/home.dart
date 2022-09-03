@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:hold_pass_en/components/pass_card_register_alert.dart';
 import 'package:hold_pass_en/provider/pass_provider.dart';
@@ -39,7 +41,7 @@ class _HomeState extends State<Home>
                       _height = 0;
                     });
 
-                    Future.delayed(const Duration(milliseconds: 200), () {
+                    Timer(const Duration(milliseconds: 200), () {
                       setState(() {
                         _icon = index == 0 ? Icons.save : Icons.upload_rounded;
                         _height = 25.0;
@@ -66,7 +68,7 @@ class _HomeState extends State<Home>
                           _height = .0;
                         });
 
-                        Future.delayed(const Duration(milliseconds: 200), () {
+                        Timer(const Duration(milliseconds: 200), () {
                           setState(() {
                             _icon =
                             index == 0 ? Icons.save : Icons.upload_rounded;

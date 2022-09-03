@@ -28,12 +28,6 @@ class PassProvider with ChangeNotifier {
 
   bool isRegistered = false;
 
-  List<Password> _listPassEmails = [];
-  List<Password> _listPassWebsites = [];
-  List<Password> _listPassApps = [];
-  List<Password> _listPassGames = [];
-  List<Password> _listPassOthers = [];
-
   // PASSWORD REGISTER SETS
   void setType(PassType? typeToRegister) {
     _passType = typeToRegister ?? PassType.email;
@@ -133,25 +127,8 @@ class PassProvider with ChangeNotifier {
     reloadPassList(type);
   }
 
-  void reloadPassList(PassType typeToReload) async {
-    switch(typeToReload){
-      case PassType.email:
-        _listPassEmails = await _passDao.getPasswords(typeToReload);
-        break;
-      case PassType.website:
-        _listPassWebsites = await _passDao.getPasswords(typeToReload);
-        break;
-      case PassType.app:
-        _listPassApps = await _passDao.getPasswords(typeToReload);
-        break;
-      case PassType.game:
-        _listPassGames = await _passDao.getPasswords(typeToReload);
-        break;
-      case PassType.other:
-        _listPassOthers = await _passDao.getPasswords(typeToReload);
-        break;
-    }
-    notifyListeners();
+  Future<List<Password>> reloadPassList(PassType typeToReload) async {
+    return await _passDao.getPasswords(typeToReload);
   }
 
   void resetInfo() {
@@ -166,11 +143,6 @@ class PassProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  List<Password> get getPassEmails => _listPassEmails;
-  List<Password> get getPassWebsites => _listPassWebsites;
-  List<Password> get getPassApps => _listPassApps;
-  List<Password> get getPassGames => _listPassGames;
-  List<Password> get getPassOthers => _listPassOthers;
   Password? get getPassToEdit => _passToEdit;
   Password? get getPassToRegister => _passToRegister;
   PageController get getPageController => _pageController;

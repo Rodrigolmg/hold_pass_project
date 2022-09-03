@@ -12,23 +12,28 @@ class PassAboutFieldInfo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     return AlertDialog(
+      insetPadding: const EdgeInsets.symmetric(
+        horizontal: 50.0,
+        vertical: 270.0,
+      ),
       alignment: Alignment.center,
-      elevation: 3,
+      elevation: 8,
       content: Center(
         child: Text(aboutInfo!),
       ),
       actions: [
         TextButton(
-          onPressed: (){
-            Navigator.of(context).pop();
-          },
-          child: const Text(
-            'Back',
-            style: TextStyle(
-              fontWeight: FontWeight.bold
-            ),
-          )
+            onPressed: (){
+              Navigator.of(context).pop();
+            },
+            child: const Text(
+              'Back',
+              style: TextStyle(
+                  fontWeight: FontWeight.bold
+              ),
+            )
         )
       ],
     );

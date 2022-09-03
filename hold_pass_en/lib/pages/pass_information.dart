@@ -27,14 +27,6 @@ class _PassInformationState extends State<PassInformation> {
     const PassOtherInfo(),
   ];
 
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    PassProvider passProvider =
-      Provider.of<PassProvider>(context, listen: false);
-    passProvider.reloadPassList(PassType.email);
-  }
-
   _onPageChange(index){
     setState(() {
       _pageController.animateToPage(
