@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:hold_pass_en/data/password_dao.dart';
 import 'package:hold_pass_en/models/password.dart';
@@ -26,7 +28,20 @@ class PassProvider with ChangeNotifier {
   String? _pin;
   bool _isAuth = false;
 
-  bool isRegistered = false;
+  bool _isRegistered = false;
+  bool _isEdited = false;
+
+  IconData _homeButtonIcon = Icons.save;
+  double _height = 25.0;
+  double _offsetFactor = .5;
+
+  final TextEditingController _itemNameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _nicknameController = TextEditingController();
+  final TextEditingController _idController = TextEditingController();
+  final TextEditingController _pinController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
 
   // PASSWORD REGISTER SETS
   void setType(PassType? typeToRegister) {
@@ -36,52 +51,68 @@ class PassProvider with ChangeNotifier {
 
   void setItemName(String itemName){
     _itemNamePass = itemName.replaceBlank();
-    notifyListeners();
   }
 
   void setEmail(String email){
     _email = email.replaceBlank();
-    notifyListeners();
   }
 
   void setUsername(String username){
     _username = username.replaceBlank();
-    notifyListeners();
   }
 
   void setNickname(String nick){
     _nickname = nick.replaceBlank();
-    notifyListeners();
   }
 
   void setPassword(String pass){
     _password = pass.replaceBlank();
-    notifyListeners();
   }
 
   void setNumId(String id){
     _numId = id.replaceBlank();
-    notifyListeners();
   }
 
   void setPin(String pin){
     _pin = pin.replaceBlank();
-    notifyListeners();
   }
 
   void setAuth(bool auth){
     _isAuth = auth;
-    notifyListeners();
   }
 
   void setPasswordToEdit(Password passToEdit){
     _passToEdit = passToEdit;
+    _isEdited = true;
+
+    setType(_passToEdit!.passType);
+
+    _itemNameController.text = _passToEdit!.itemNamePass!;
+    _emailController.text = _passToEdit!.email ?? '';
+    _usernameController.text = _passToEdit!.username ?? '';
+    _nicknameController.text = _passToEdit!.nickname ?? '';
+    _idController.text = _passToEdit!.numId ?? '';
+    _pinController.text = _passToEdit!.pin ?? '';
+    _passwordController.text = _passToEdit!.password!;
+    _offsetFactor = .0;
     notifyListeners();
   }
 
   // PAGE CONTROLLER
   void setPageIndex(int pageIndex) {
     _currentPageIndex = pageIndex;
+
+
+    notifyListeners();
+  }
+
+  void setIcon(){
+    if(!_isEdited){
+      _homeButtonIcon = _currentPageIndex == 0 ?
+      Icons.save : Icons.upload_rounded;
+    } else {
+      _homeButtonIcon = Icons.edit;
+    }
     notifyListeners();
   }
 
@@ -94,44 +125,70 @@ class PassProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  void setIconHeight(double height) {
+    _height = height;
+    notifyListeners();
+  }
+
   // PASSWORD DAO
   void confirmInfo(){
     _passToRegister = Password(
-        passType: _passType,
-        password: _password,
-        itemNamePass: _itemNamePass,
-        email: _email,
-        username: _username,
-        nickname: _nickname,
-        numId: _numId,
-        pin: _pin,
-        isAuth: _isAuth
+      passType: _passType,
+      password: _password,
+      itemNamePass: _itemNamePass,
+      email: _email,
+      username: _username,
+      nickname: _nickname,
+      numId: _numId,
+      pin: _pin,
+      isAuth: _isAuth
+    );
+    notifyListeners();
+  }
+
+  void confirmInfoToEdit(){
+    _isEdited = false;
+    _passToEdit = Password(
+      id: _passToEdit!.id,
+      passType: _passType,
+      password: _password ?? _passwordController.text,
+      itemNamePass: _itemNamePass ?? _itemNameController.text,
+      email: _email ?? _emailController.text,
+      username: _username ?? _usernameController.text,
+      nickname: _nickname ?? _nicknameController.text,
+      numId: _numId ?? _idController.text,
+      pin: _pin ?? _pinController.text,
+      isAuth: _isAuth
     );
     notifyListeners();
   }
 
   void registerPassword() async {
     await _passDao.insert(_passToRegister!);
-    reloadPassList(_passToRegister!.passType!);
-    resetInfo();
+    await resetInfo();
     notifyListeners();
   }
 
-  void updatePassword(Password passToUpdate) async {
-    await _passDao.update(passToUpdate);
-    reloadPassList(passToUpdate.passType!);
+  void updatePassword() async {
+    Map<String, Object?>? json = await _passDao.update(_passToEdit!);
+    _isEdited = json != null;
+    await resetInfo();
+    notifyListeners();
   }
 
   void deletePassword(Password passToDelete, PassType type) async {
     await _passDao.delete(passToDelete);
-    reloadPassList(type);
+    notifyListeners();
   }
 
   Future<List<Password>> reloadPassList(PassType typeToReload) async {
     return await _passDao.getPasswords(typeToReload);
   }
 
-  void resetInfo() {
+  Future<void> resetInfo() async {
+
+    _isEdited = !_isEdited;
+
     _passType = PassType.email;
     _itemNamePass = null;
     _email = null;
@@ -140,6 +197,17 @@ class PassProvider with ChangeNotifier {
     _numId = null;
     _pin = null;
     _isAuth = false;
+
+    _itemNameController.text = '';
+    _emailController.text = '';
+    _usernameController.text = '';
+    _nicknameController.text = '';
+    _idController.text = '';
+    _pinController.text = '';
+    _passwordController.text = '';
+
+    // _homeButtonIcon = Icons.save;
+    _offsetFactor = .1;
     notifyListeners();
   }
 
@@ -148,4 +216,18 @@ class PassProvider with ChangeNotifier {
   PageController get getPageController => _pageController;
   int get getPageIndex => _currentPageIndex;
   PassType get getPassType => _passType;
+  IconData get getIconButton => _homeButtonIcon;
+  double get getIconHeight => _height;
+  double get getOffsetFactor => _offsetFactor;
+
+  bool get isEditing => _isEdited;
+
+  TextEditingController get getItemNameController => _itemNameController;
+  TextEditingController get getEmailController => _emailController;
+  TextEditingController get getUsernameController => _usernameController;
+  TextEditingController get getNicknameController => _nicknameController;
+  TextEditingController get getIdController => _idController;
+  TextEditingController get getPinController => _pinController;
+  TextEditingController get getPasswordController => _passwordController;
+
 }

@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:hold_pass_en/components/pass_about_field_info.dart';
 import 'package:hold_pass_en/components/pass_textfield.dart';
 import 'package:hold_pass_en/components/pass_type_list.dart';
+import 'package:hold_pass_en/models/password.dart';
 import 'package:hold_pass_en/provider/pass_provider.dart';
 import 'package:hold_pass_en/util/pass_type.dart';
 import 'package:hold_pass_en/util/textfield_about.dart';
@@ -19,6 +20,7 @@ class PassRegister extends StatefulWidget {
 class _PassRegisterState extends State<PassRegister> {
 
   bool _obscureText = true;
+
 
   void _showAboutInfo(String about){
     showGeneralDialog(
@@ -69,6 +71,7 @@ class _PassRegisterState extends State<PassRegister> {
             SizedBox(
               width: width,
               child: PassTextField(
+                textEditingController: passProvider.getItemNameController,
                 label: 'Item Name',
                 suffixWidget: IconButton(
                   onPressed: (){
@@ -90,6 +93,7 @@ class _PassRegisterState extends State<PassRegister> {
             SizedBox(
               width: width,
               child: PassTextField(
+                textEditingController: passProvider.getEmailController,
                 label: 'E-mail',
                 keyboardType: TextInputType.emailAddress,
                 validator: (value) {
@@ -119,6 +123,7 @@ class _PassRegisterState extends State<PassRegister> {
             SizedBox(
               width: width,
               child: PassTextField(
+                textEditingController: passProvider.getUsernameController,
                 label: 'Username',
                 suffixWidget: IconButton(
                   onPressed: (){
@@ -136,6 +141,7 @@ class _PassRegisterState extends State<PassRegister> {
             SizedBox(
               width: width,
               child: PassTextField(
+                textEditingController: passProvider.getNicknameController,
                 label: 'Nickname',
                 suffixWidget: IconButton(
                   onPressed: (){
@@ -149,8 +155,8 @@ class _PassRegisterState extends State<PassRegister> {
                       && (value == null || value.trim().isEmpty);
 
                   return validateTextfield(
-                    isNotValid,
-                    'Please enter your nickname in game'
+                      isNotValid,
+                      'Please enter your nickname in game'
                   );
                 },
                 onChange: passProvider.setNickname,
@@ -162,6 +168,7 @@ class _PassRegisterState extends State<PassRegister> {
             SizedBox(
               width: width,
               child: PassTextField(
+                textEditingController: passProvider.getIdController,
                 label: 'ID',
                 keyboardType: TextInputType.number,
                 onChange: passProvider.setNumId,
@@ -173,6 +180,7 @@ class _PassRegisterState extends State<PassRegister> {
             SizedBox(
               width: width,
               child: PassTextField(
+                textEditingController: passProvider.getPinController,
                 label: 'Pin',
                 keyboardType: TextInputType.number,
                 onChange: passProvider.setPin,
@@ -184,6 +192,7 @@ class _PassRegisterState extends State<PassRegister> {
             SizedBox(
               width: width,
               child: PassTextField(
+                textEditingController: passProvider.getPasswordController,
                 label: 'Password',
                 obscureText: _obscureText,
                 suffixWidget: IconButton(

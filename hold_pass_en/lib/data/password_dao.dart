@@ -14,9 +14,9 @@ class PasswordDao {
     await _passwordStore.add(await _db, pass.toJson());
   }
 
-  Future update(Password pass) async {
+  Future<Map<String, Object?>?> update(Password pass) async {
     // final finder = Finder(filter: Filter.equals('id', ));
-    await _passwordStore.record(pass.id).update(await _db, pass.toJson());
+    return await _passwordStore.record(pass.id).update(await _db, pass.toJson());
   }
 
   Future delete(Password pass) async {

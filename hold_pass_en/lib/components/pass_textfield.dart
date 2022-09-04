@@ -11,6 +11,7 @@ class PassTextField extends StatelessWidget {
   TextInputType keyboardType;
   String? Function(String?)? validator;
   List<TextInputFormatter>? inputFormatters;
+  TextEditingController? textEditingController;
 
   PassTextField({Key? key,
     this.suffixWidget,
@@ -19,7 +20,8 @@ class PassTextField extends StatelessWidget {
     @required this.onChange,
     this.keyboardType = TextInputType.text,
     this.validator,
-    this.inputFormatters
+    this.inputFormatters,
+    @required this.textEditingController
   }) : super(key: key);
 
   @override
@@ -37,6 +39,7 @@ class PassTextField extends StatelessWidget {
           ),
         ),
         TextFormField(
+          controller: textEditingController,
           onChanged: onChange,
           keyboardType: keyboardType,
           validator: validator ?? (val) => null,

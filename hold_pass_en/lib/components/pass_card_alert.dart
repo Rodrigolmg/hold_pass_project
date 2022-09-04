@@ -1,28 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:hold_pass_en/components/pass_info_tile.dart';
 import 'package:hold_pass_en/models/password.dart';
-import 'package:hold_pass_en/provider/pass_provider.dart';
 import 'package:hold_pass_en/util/pass_type_name.dart';
 import 'package:hold_pass_en/util/string_extension.dart';
-import 'package:provider/provider.dart';
 
-class PassCardRegisterAlert extends StatelessWidget {
+class PassCardAlert extends StatelessWidget {
   
-  final Password? passToRegister;
+  final Password? password;
   final bool isRegister;
+  final Function? callback;
 
-  const PassCardRegisterAlert({
-    @required this.passToRegister,
+  const PassCardAlert({
+    @required this.password,
     this.isRegister = true,
+    @required this.callback,
     Key? key
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
 
-    PassProvider passProvider =
-      Provider.of<PassProvider>(context, listen: false);
-    
     return AlertDialog(
       elevation: 8,
       content: Column(
@@ -36,56 +33,56 @@ class PassCardRegisterAlert extends StatelessWidget {
           ),
           PassInfoTile(
               label: 'Item type:',
-              detail: PassTypeName.getTypeName(passToRegister!.passType!).capitalize()
+              detail: PassTypeName.getTypeName(password!.passType!).capitalize()
           ),
           const SizedBox(
             height: .5,
           ),
           PassInfoTile(
               label: 'Item name:',
-              detail: passToRegister!.itemNamePass!.capitalize()
+              detail: password!.itemNamePass!.capitalize()
           ),
           const SizedBox(
             height: .5,
           ),
           PassInfoTile(
               label: 'E-mail:',
-              detail: passToRegister!.email
+              detail: password!.email
           ),
           const SizedBox(
             height: .5,
           ),
           PassInfoTile(
               label: 'Username:',
-              detail: passToRegister!.username
+              detail: password!.username
           ),
           const SizedBox(
             height: .5,
           ),
           PassInfoTile(
               label: 'Nickname:',
-              detail: passToRegister!.nickname
+              detail: password!.nickname
           ),
           const SizedBox(
             height: .5,
           ),
           PassInfoTile(
               label: 'ID:',
-              detail: passToRegister!.numId
+              detail: password!.numId
           ),
           const SizedBox(
             height: .5,
           ),
           PassInfoTile(
               label: 'Pin:',
-              detail: passToRegister!.pin
+              detail: password!.pin
           ),
           const SizedBox(
             height: .5,
           ),
           PassInfoTile(
               label: 'Password:',
-              detail: passToRegister!.password
+              detail: password!.password
           ),
         ],
       ),
@@ -95,7 +92,7 @@ class PassCardRegisterAlert extends StatelessWidget {
               Navigator.of(context).pop();
             },
             child: const Text(
-              'No, I\'ll edit it',
+              'No',
               style: TextStyle(
                   fontWeight: FontWeight.bold
               ),
@@ -103,12 +100,12 @@ class PassCardRegisterAlert extends StatelessWidget {
         ),
         TextButton(
             onPressed: (){
-              passProvider.registerPassword();
+              callback!();
               Navigator.of(context).pop();
             },
-            child: const Text(
-              'Yes, register',
-              style: TextStyle(
+            child: Text(
+              'Yes, ${isRegister ? 'register it' : 'edit it'}',
+              style: const TextStyle(
                   fontWeight: FontWeight.bold
               ),
             )
