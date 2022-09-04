@@ -28,7 +28,6 @@ class PassProvider with ChangeNotifier {
   String? _pin;
   bool _isAuth = false;
 
-  bool _isRegistered = false;
   bool _isEdited = false;
 
   IconData _homeButtonIcon = Icons.save;
@@ -101,8 +100,6 @@ class PassProvider with ChangeNotifier {
   // PAGE CONTROLLER
   void setPageIndex(int pageIndex) {
     _currentPageIndex = pageIndex;
-
-
     notifyListeners();
   }
 

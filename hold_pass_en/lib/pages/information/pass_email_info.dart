@@ -30,6 +30,8 @@ class _PassEmailInfoState extends State<PassEmailInfo>{
   @override
   Widget build(BuildContext context) {
 
+    PassProvider passProvider = Provider.of<PassProvider>(context, listen: false);
+
     return Padding(
       padding: const EdgeInsets.only(top: 15),
       child: FutureBuilder(
@@ -44,32 +46,48 @@ class _PassEmailInfoState extends State<PassEmailInfo>{
                   child: Text(
                     'No e-mail registered',
                     style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20
                     ),
                   ),
                 );
               }
 
-              return ListView.builder(
+              return ListView.separated(
                   itemCount: list.length,
+                  separatorBuilder: (context, i) => const Divider(),
                   itemBuilder: (_, i) {
                     _delay = _delay + 100;
-                    return Padding(
-                      padding: const EdgeInsets.only(bottom: 8.0),
-                      child: GestureDetector(
-                          onTap: () {
-                            showDialog<void>(
-                                context: context,
-                                builder: (context) {
-                                  return PassCardInfo(passwordModel: list[i]);
-                                }
-                            );
-                          },
-                          child: PassCardSmry(
-                            passwordModel: list[i],
-                            delay: _delay,
-                          )
+                    return Dismissible(
+                      key: ObjectKey(list[i].id),
+                      direction: DismissDirection.endToStart,
+                      background: Container(
+                        alignment: Alignment.centerRight,
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        decoration: const BoxDecoration(
+                          color: Colors.redAccent
+                        ),
+                        child: const Icon(Icons.delete_sweep_outlined),
+                      ),
+                      onDismissed: (direction){
+                        passProvider.deletePassword(list[i], list[i].passType!);
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.only(bottom: 8.0),
+                        child: GestureDetector(
+                            onTap: () {
+                              showDialog<void>(
+                                  context: context,
+                                  builder: (context) {
+                                    return PassCardInfo(passwordModel: list[i]);
+                                  }
+                              );
+                            },
+                            child: PassCardSmry(
+                              passwordModel: list[i],
+                              delay: _delay,
+                            )
+                        ),
                       ),
                     );
                   }
