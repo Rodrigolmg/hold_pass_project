@@ -18,13 +18,6 @@ class _PassWebsiteInfoState extends State<PassWebsiteInfo> {
 
   Future<List<Password>?>? _futureList;
 
-  @override
-  void initState() {
-    super.initState();
-    _futureList = Provider.of<PassProvider>(context, listen: false)
-        .reloadPassList(PassType.website);
-  }
-
   int _delay = 300;
 
   @override

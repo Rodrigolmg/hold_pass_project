@@ -10,18 +10,18 @@ class PasswordDao {
 
   Future<Database> get _db async => await AppDatabase.instance.database;
 
-  Future insert(Password pass) async {
-    await _passwordStore.add(await _db, pass.toJson());
+  Future<void> insert(Password pass) async {
+    _passwordStore.add(await _db, pass.toJson());
   }
 
   Future<Map<String, Object?>?> update(Password pass) async {
     // final finder = Finder(filter: Filter.equals('id', ));
-    return await _passwordStore.record(pass.id).update(await _db, pass.toJson());
+    return await _passwordStore.record(pass.id!).update(await _db, pass.toJson());
   }
 
-  Future delete(Password pass) async {
+  Future<void> delete(Password pass) async {
     // final finder = Finder(filter: Filter.equals('id', pass.id));
-    await _passwordStore.record(pass.id).delete(await _db);
+    _passwordStore.record(pass.id!).delete(await _db);
   }
 
   Future<List<Password>> getPasswords(PassType type) async {

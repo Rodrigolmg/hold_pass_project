@@ -7,7 +7,7 @@ part 'password.g.dart';
 @JsonSerializable()
 class Password {
 
-  int id;
+  int? id;
 
   final PassType? passType;
   final String? itemNamePass;
@@ -20,7 +20,7 @@ class Password {
   final bool? isAuth;
 
   Password({
-    this.id = -1,
+    this.id,
     @required this.passType,
     this.itemNamePass,
     this.email,

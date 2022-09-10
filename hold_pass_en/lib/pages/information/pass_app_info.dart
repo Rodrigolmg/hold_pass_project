@@ -18,13 +18,6 @@ class _PassAppInfoState extends State<PassAppInfo> {
 
   Future<List<Password>?>? _futureList;
 
-  @override
-  void initState() {
-    super.initState();
-    _futureList = Provider.of<PassProvider>(context, listen: false)
-        .reloadPassList(PassType.app);
-  }
-
   int _delay = 300;
 
   @override

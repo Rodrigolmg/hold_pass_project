@@ -1,24 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:hold_pass_en/components/pass_info_tile.dart';
 import 'package:hold_pass_en/models/password.dart';
+import 'package:hold_pass_en/util/action_type.dart';
 import 'package:hold_pass_en/util/pass_type_name.dart';
 import 'package:hold_pass_en/util/string_extension.dart';
 
 class PassCardAlert extends StatelessWidget {
   
   final Password? password;
-  final bool isRegister;
+  final ActionType actionType;
   final Function? callback;
 
   const PassCardAlert({
     @required this.password,
-    this.isRegister = true,
+    this.actionType = ActionType.register,
     @required this.callback,
     Key? key
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+
+    String title = actionType == ActionType.delete ? 'Are you sure to delete?'
+        : 'Is password info correct?';
 
     return AlertDialog(
       elevation: 8,
@@ -27,7 +31,9 @@ class PassCardAlert extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Center(child: Text('Is password info correct?')),
+          Center(
+            child: Text(title)
+          ),
           const SizedBox(
             height: 25,
           ),
@@ -104,7 +110,7 @@ class PassCardAlert extends StatelessWidget {
               Navigator.of(context).pop();
             },
             child: Text(
-              'Yes, ${isRegister ? 'register it' : 'edit it'}',
+              'Yes, ${actionType.descr}',
               style: const TextStyle(
                   fontWeight: FontWeight.bold
               ),

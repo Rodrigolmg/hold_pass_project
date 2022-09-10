@@ -19,6 +19,7 @@ class _PassInformationState extends State<PassInformation> {
 
   final PageController _pageController = PageController(initialPage: 0);
 
+
   List<Widget> _getPages() => [
     const PassEmailInfo(),
     const PassWebsiteInfo(),
@@ -39,13 +40,19 @@ class _PassInformationState extends State<PassInformation> {
 
   @override
   Widget build(BuildContext context) {
+
+    PassProvider passProvider =
+      Provider.of<PassProvider>(context, listen: false);
+
     return DefaultTabController(
       length: 5,
       child: Scaffold(
         appBar: TabBar(
           unselectedLabelColor: Colors.brown,
           indicatorColor: Colors.orangeAccent,
-          onTap: _onPageChange,
+          onTap: (index) {
+            _onPageChange(index);
+          },
           tabs: const [
             Tab(
               icon: Icon(

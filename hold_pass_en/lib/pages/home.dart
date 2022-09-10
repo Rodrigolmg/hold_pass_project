@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:hold_pass_en/components/pass_card_alert.dart';
+import 'package:hold_pass_en/models/password.dart';
 import 'package:hold_pass_en/provider/pass_provider.dart';
 import 'package:hold_pass_en/pages/pass_information.dart';
 import 'package:hold_pass_en/pages/pass_register.dart';
@@ -91,7 +92,7 @@ class _HomeState extends State<Home>{
                         return;
                       }
                       if(passProvider.getPageIndex == 0){
-                        _doFunction(passProvider.getPassToEdit == null ?
+                        _doFunction(!passProvider.isEditing ?
                             ActionType.register :
                             ActionType.edit,
                             passProvider
@@ -125,14 +126,15 @@ class _HomeState extends State<Home>{
                     shape: const CircleBorder(),
                     padding: const EdgeInsets.all(10)
                   ),
-                  onPressed: (){
-                    passProvider.setIconHeight(.0);
-                    passProvider.resetInfo();
-                    Timer(const Duration(milliseconds: 450), () {
-                      passProvider.setIcon();
-                      passProvider.setIconHeight(25.0);
-                    });
-
+                  onPressed: () async {
+                    if(passProvider.isEditing) {
+                      passProvider.setIconHeight(.0);
+                      passProvider.resetInfo();
+                      Timer(const Duration(milliseconds: 450), () {
+                        passProvider.setIcon();
+                        passProvider.setIconHeight(25.0);
+                      });
+                    }
                   },
                   child: const Icon(
                     Icons.cancel_outlined,
@@ -160,43 +162,46 @@ class _HomeState extends State<Home>{
     switch(actionType){
       case ActionType.register:
         passProvider.confirmInfo();
-        showGeneralDialog(
-            context: context,
-            pageBuilder: (context, a1, a2) => Container(),
-            transitionBuilder: (context, a1, a2, child) {
-              var curve = Curves.easeInQuad.transform(a1.value);
-              return Transform.scale(
-                scale: curve,
-                child: PassCardAlert(
-                  password: passProvider.getPassToRegister,
-                  callback: passProvider.registerPassword,
-                ),
-              );
-            },
-            transitionDuration: const Duration(milliseconds: 230)
+        _showDialog(
+          passProvider.getPassToRegister,
+          (){
+            passProvider.registerPassword();
+            passProvider.reloadPassList(
+              passProvider.getPassToRegister!.passType!
+            );
+          }
         );
         break;
       case ActionType.edit:
         passProvider.confirmInfoToEdit();
-        showGeneralDialog(
-          context: context,
-          pageBuilder: (context, a1, a2) => Container(),
-          transitionBuilder: (context, a1, a2, child) {
-            var curve = Curves.easeInQuad.transform(a1.value);
-            return Transform.scale(
-              scale: curve,
-              child: PassCardAlert(
-                password: passProvider.getPassToEdit,
-                callback: passProvider.updatePassword,
-                isRegister: false,
-              ),
-            );
-          },
-          transitionDuration: const Duration(milliseconds: 230)
+        _showDialog(
+          passProvider.getPassToEdit,
+          passProvider.updatePassword
         );
         break;
       case ActionType.export:
         break;
+      case ActionType.delete:
+        break;
     }
   }
+
+  void _showDialog(Password? password, Function callback){
+    showGeneralDialog(
+        context: context,
+        pageBuilder: (context, a1, a2) => Container(),
+        transitionBuilder: (context, a1, a2, child) {
+          var curve = Curves.easeInQuad.transform(a1.value);
+          return Transform.scale(
+            scale: curve,
+            child: PassCardAlert(
+              password: password,
+              callback: callback,
+            ),
+          );
+        },
+        transitionDuration: const Duration(milliseconds: 230)
+    );
+  }
+
 }

@@ -8,6 +8,10 @@ import 'package:hold_pass_en/util/string_extension.dart';
 
 class PassProvider with ChangeNotifier {
 
+  PassProvider(){
+    reloadEmailList();
+  }
+
   final PasswordDao _passDao = PasswordDao();
   final PageController _pageController = PageController(
       initialPage: 0
@@ -17,6 +21,8 @@ class PassProvider with ChangeNotifier {
 
   Password? _passToEdit;
   Password? _passToRegister;
+  Password? _passToDelete;
+  List<Password>? _listPassEmail;
 
   PassType _passType = PassType.email;
   String? _itemNamePass;
@@ -97,6 +103,21 @@ class PassProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  void setPasswordToDelete(Password passToDelete) {
+    _passToDelete = passToDelete;
+    notifyListeners();
+  }
+
+  Future<void> undoneDelete() async {
+    _passToDelete = null;
+    notifyListeners();
+  }
+
+  void reloadEmailList() async {
+   _listPassEmail = await _passDao.getPasswords(PassType.email);
+   notifyListeners();
+  }
+
   // PAGE CONTROLLER
   void setPageIndex(int pageIndex) {
     _currentPageIndex = pageIndex;
@@ -162,29 +183,50 @@ class PassProvider with ChangeNotifier {
 
   void registerPassword() async {
     await _passDao.insert(_passToRegister!);
-    await resetInfo();
-    notifyListeners();
+    resetInfo();
   }
 
   void updatePassword() async {
     Map<String, Object?>? json = await _passDao.update(_passToEdit!);
     _isEdited = json != null;
-    await resetInfo();
+    resetInfo();
     notifyListeners();
   }
 
-  void deletePassword(Password passToDelete, PassType type) async {
-    await _passDao.delete(passToDelete);
-    notifyListeners();
+  void deletePassword() {
+    _passDao.delete(_passToDelete!);
   }
 
-  Future<List<Password>> reloadPassList(PassType typeToReload) async {
-    return await _passDao.getPasswords(typeToReload);
+  // Future<List<Password>?> reloadPassList(PassType typeToReload) async {
+  //   return await _passDao.getPasswords(typeToReload);
+  // }
+
+  void reloadPassList(PassType typeToReload) async {
+    switch(typeToReload){
+
+      case PassType.email:
+        reloadEmailList();
+        break;
+      case PassType.website:
+        // TODO: Handle this case.
+        break;
+      case PassType.app:
+        // TODO: Handle this case.
+        break;
+      case PassType.game:
+        // TODO: Handle this case.
+        break;
+      case PassType.other:
+        // TODO: Handle this case.
+        break;
+    }
   }
 
   Future<void> resetInfo() async {
 
-    _isEdited = !_isEdited;
+    if(_isEdited){
+      _isEdited = !_isEdited;
+    }
 
     _passType = PassType.email;
     _itemNamePass = null;
@@ -210,6 +252,10 @@ class PassProvider with ChangeNotifier {
 
   Password? get getPassToEdit => _passToEdit;
   Password? get getPassToRegister => _passToRegister;
+  Password? get getPassToDelete => _passToDelete;
+
+  List<Password>? get getEmails => _listPassEmail;
+
   PageController get getPageController => _pageController;
   int get getPageIndex => _currentPageIndex;
   PassType get getPassType => _passType;
@@ -227,4 +273,14 @@ class PassProvider with ChangeNotifier {
   TextEditingController get getPinController => _pinController;
   TextEditingController get getPasswordController => _passwordController;
 
+  Widget get getSnackDelete {
+    return SnackBar(
+      duration: const Duration(seconds: 5),
+      content: const Text('Undone delete'),
+      action: SnackBarAction(
+        label: 'Undo',
+        onPressed: undoneDelete
+      ),
+    );
+  }
 }
