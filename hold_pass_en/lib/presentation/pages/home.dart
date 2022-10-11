@@ -1,13 +1,15 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_it/get_it.dart';
+import 'package:hold_pass_en/domain/entities/password.dart';
+import 'package:hold_pass_en/presentation/bloc/home/home_bloc.dart';
+import 'package:hold_pass_en/presentation/bloc/password/password_bloc.dart';
 import 'package:hold_pass_en/presentation/components/pass_card_alert.dart';
-import 'package:hold_pass_en/data/models/password_model.dart';
-import 'package:hold_pass_en/presentation/provider/pass_provider.dart';
 import 'package:hold_pass_en/presentation/pages/pass_information.dart';
 import 'package:hold_pass_en/presentation/pages/pass_register.dart';
 import 'package:hold_pass_en/core/util/action_type.dart';
-import 'package:provider/provider.dart';
 
 class Home extends StatefulWidget {
 
@@ -21,6 +23,17 @@ class _HomeState extends State<Home>{
 
   final _formKey = GlobalKey<FormState>();
   final Offset _offset = Offset.zero;
+  final PageController _pageController = PageController(
+      initialPage: 0
+  );
+
+  ScrollPhysics? _scrollPhysics;
+  int _pageIndex = 0;
+  double _iconHeight = 25.0;
+  double? _offsetFactor = .5;
+  IconData? _icon = Icons.save;
+  bool _isEditing = false;
+  Password? _passToRegister = GetIt.I.get<Password>();
 
   @override
   Widget build(BuildContext context) {
@@ -30,27 +43,44 @@ class _HomeState extends State<Home>{
     double height = MediaQuery.of(context).size.height;
 
     return SafeArea(
-        child: Consumer<PassProvider>(
-          builder: (context, passProvider, _) => Stack(
+        child: MultiBlocListener(
+          listeners: [
+            BlocListener<HomeBloc, HomeState>(
+              listener: _homeListener
+            ),
+            BlocListener<PasswordBloc, PasswordState>(
+              listener: _passwordListener
+            ),
+          ],
+          child: Stack(
             children: [
               Scaffold(
                 body: PageView.builder(
-                  physics: passProvider.isEditing ? const NeverScrollableScrollPhysics()
-                    : const PageScrollPhysics(),
-                  controller: passProvider.getPageController,
-                  scrollDirection: Axis.horizontal,
-                  itemCount: _getPages().length,
-                  onPageChanged: (index) async {
-                    if(index != passProvider.getPageIndex) {
-                      passProvider.setIconHeight(.0);
-                      passProvider.setPageIndex(index);
-                      Timer(const Duration(milliseconds: 450), () {
-                        passProvider.setIcon();
-                        passProvider.setIconHeight(25.0);
-                      });
-                    }
-                  },
-                  itemBuilder: (_, i) => _getPages()[i]
+                    physics: _scrollPhysics,
+                    controller: _pageController,
+                    scrollDirection: Axis.horizontal,
+                    itemCount: _getPages().length,
+                    onPageChanged: (index) async {
+                      if(index != _pageIndex) {
+                        context.read<HomeBloc>().add(
+                          ChangePageEvent(
+                           iconHeight: .0,
+                           pageIndex: index
+                          )
+                        );
+                        Timer(const Duration(milliseconds: 450), () {
+                          context.read<HomeBloc>().add(
+                            ChangePageEvent(
+                              iconHeight: 25.0,
+                              pageIndex: index
+                            )
+                          );
+                          // passProvider.setIcon();
+                          // passProvider.setIconHeight(25.0);
+                        });
+                      }
+                    },
+                    itemBuilder: (_, i) => _getPages()[i]
                 ),
                 bottomNavigationBar: BottomAppBar(
                   shape: const CircularNotchedRectangle(),
@@ -59,12 +89,16 @@ class _HomeState extends State<Home>{
                   child: SizedBox(
                     child: BottomNavigationBar(
                         backgroundColor: Colors.brown,
-                        currentIndex: passProvider.getPageIndex,
+                        currentIndex: _pageIndex,
                         selectedItemColor: Colors.orangeAccent,
                         unselectedItemColor: Colors.white60,
                         onTap: (index){
-                          if(index != passProvider.getPageIndex) {
-                            passProvider.animateToPage(index);
+                          if(index != _pageIndex) {
+                            _pageController.animateToPage(
+                              index,
+                              duration: const Duration(milliseconds: 500),
+                              curve: Curves.decelerate
+                            );
                           }
                         },
                         items: const [
@@ -91,24 +125,24 @@ class _HomeState extends State<Home>{
                       if(!_formKey.currentState!.validate()){
                         return;
                       }
-                      if(passProvider.getPageIndex == 0){
-                        _doFunction(!passProvider.isEditing ?
-                            ActionType.register :
-                            ActionType.edit,
-                            passProvider
+                      if(_pageIndex == 0){
+                        _doFunction(_isEditing ?
+                          ActionType.edit :
+                          ActionType.register,
+                          context
                         );
                       } else {
-                        _doFunction(ActionType.export, passProvider);
+                        _doFunction(ActionType.export, context);
                       }
 
                     },
                     backgroundColor: Colors.orangeAccent,
                     child: TweenAnimationBuilder<double>(
                         curve: Curves.easeOutQuad,
-                        tween: Tween(begin: 25.0, end: passProvider.getIconHeight),
+                        tween: Tween(begin: 25.0, end: _iconHeight),
                         duration: const Duration(milliseconds: 250),
                         builder: (context, tween, child){
-                          return Icon(passProvider.getIconButton,
+                          return Icon(_icon,
                             size: tween,
                           );
                         }
@@ -117,35 +151,57 @@ class _HomeState extends State<Home>{
                 ),
               ),
               AnimatedPositioned(
-                curve: Curves.decelerate,
-                duration: const Duration(milliseconds: 500),
-                right: _offset.dx - (height * passProvider.getOffsetFactor),
-                top: width * .05,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    shape: const CircleBorder(),
-                    padding: const EdgeInsets.all(10)
-                  ),
-                  onPressed: () async {
-                    if(passProvider.isEditing) {
-                      passProvider.setIconHeight(.0);
-                      passProvider.resetInfo();
-                      Timer(const Duration(milliseconds: 450), () {
-                        passProvider.setIcon();
-                        passProvider.setIconHeight(25.0);
-                      });
-                    }
-                  },
-                  child: const Icon(
-                    Icons.cancel_outlined,
-                    size: 35,
-                  ),
-                )
+                  curve: Curves.decelerate,
+                  duration: const Duration(milliseconds: 500),
+                  right: _offset.dx - (height * _offsetFactor!),
+                  top: width * .05,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        shape: const CircleBorder(),
+                        padding: const EdgeInsets.all(10)
+                    ),
+                    onPressed: () async {
+                      if(_isEditing) {
+                        context.read<PasswordBloc>().add(
+                          CancelPasswordEdit().call(.0)
+                        );
+                        Timer(const Duration(milliseconds: 450), () {
+                          context.read<PasswordBloc>().add(
+                            CancelPasswordEdit().call(25.0)
+                          );
+                        });
+                      }
+                    },
+                    child: const Icon(
+                      Icons.cancel_outlined,
+                      size: 35,
+                    ),
+                  )
               )
             ],
-          ),
+          )
         )
     );
+  }
+
+  void _homeListener(BuildContext context, HomeState state){
+    _pageIndex = state.pageIndex;
+    _icon = state.icon;
+    _iconHeight = state.iconHeightValue;
+  }
+
+  void _passwordListener(BuildContext context, PasswordState state){
+    if(state is PasswordSelected){
+      _isEditing = state.isEditing;
+      _scrollPhysics = _isEditing ? const NeverScrollableScrollPhysics()
+          : const PageScrollPhysics();
+      _offsetFactor = state.offset;
+      _icon = Icons.edit;
+    } else if (state is ConfirmingPasswordToRegister){
+      _passToRegister = state.passwordToRegister;
+    } else {
+      _fillPassFields(state);
+    }
   }
 
   List<Widget> _getPages(){
@@ -158,26 +214,27 @@ class _HomeState extends State<Home>{
     ];
   }
 
-  void _doFunction(ActionType actionType, PassProvider passProvider) {
+  void _doFunction(ActionType actionType, BuildContext context) {
     switch(actionType){
       case ActionType.register:
-        passProvider.confirmInfo();
+        context.read<PasswordBloc>().add(
+            ConfirmPasswordRegisterEvent().call(_passToRegister!)
+        );
         _showDialog(
-          passProvider.getPassToRegister,
+          _passToRegister,
           (){
-            passProvider.registerPassword();
-            passProvider.reloadPassList(
-              passProvider.getPassToRegister!.passType!
-            );
+            context.read<PasswordBloc>().add(RegisterPasswordEvent()
+                .call(_passToRegister!));
+            // Reload event
           }
         );
         break;
       case ActionType.edit:
-        passProvider.confirmInfoToEdit();
-        _showDialog(
-          passProvider.getPassToEdit,
-          passProvider.updatePassword
-        );
+        // passProvider.confirmInfoToEdit();
+        // _showDialog(
+        //   passProvider.getPassToEdit,
+        //   passProvider.updatePassword
+        // );
         break;
       case ActionType.export:
         break;
@@ -186,7 +243,7 @@ class _HomeState extends State<Home>{
     }
   }
 
-  void _showDialog(PasswordModel? password, Function callback){
+  void _showDialog(Password? password, Function callback){
     showGeneralDialog(
         context: context,
         pageBuilder: (context, a1, a2) => Container(),
@@ -204,4 +261,44 @@ class _HomeState extends State<Home>{
     );
   }
 
+  void _fillPassFields(PasswordState state){
+
+    if(state is PassTypeFilled){
+      _passToRegister!.passType = state.passtType;
+    }
+
+    else if (state is ItemNameFilled){
+      _passToRegister!.itemNamePass = state.itemName.isEmpty ? '-'
+          : state.itemName;
+    }
+
+    else if (state is EmailFilled){
+      _passToRegister!.email = state.email.isEmpty ? '-' : state.email;
+    }
+
+    else if (state is UsernameFilled){
+      _passToRegister!.username = state.username.isEmpty ? '-' : state.username;
+    }
+
+    else if (state is NicknameFilled){
+      _passToRegister!.nickname = state.nickname.isEmpty ? '-' : state.nickname;
+    }
+
+    else if (state is PasswordFilled){
+      _passToRegister!.password = state.password.isEmpty ? '-' :
+        state.password;
+    }
+
+    else if (state is NumIdFilled){
+      _passToRegister!.numId = state.numId.isEmpty ? '-' : state.numId;
+    }
+
+    else if (state is PinFilled){
+      _passToRegister!.pin = state.pin.isEmpty ? '-' : state.pin;
+    }
+
+    else if (state is AuthFilled){
+      _passToRegister!.isAuth = state.isAuth;
+    }
+  }
 }

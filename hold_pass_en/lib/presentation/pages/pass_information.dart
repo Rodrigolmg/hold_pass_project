@@ -5,13 +5,12 @@ import 'package:hold_pass_en/presentation/pages/information/pass_email_info.dart
 import 'package:hold_pass_en/presentation/pages/information/pass_game_info.dart';
 import 'package:hold_pass_en/presentation/pages/information/pass_other_info.dart';
 import 'package:hold_pass_en/presentation/pages/information/pass_website_info.dart';
-import 'package:provider/provider.dart';
 
 class PassInformation extends StatefulWidget {
   const PassInformation({Key? key}) : super(key: key);
 
   @override
-  _PassInformationState createState() => _PassInformationState();
+  State createState() => _PassInformationState();
 }
 
 class _PassInformationState extends State<PassInformation> {
@@ -39,9 +38,6 @@ class _PassInformationState extends State<PassInformation> {
 
   @override
   Widget build(BuildContext context) {
-
-    PassProvider passProvider =
-      Provider.of<PassProvider>(context, listen: false);
 
     return DefaultTabController(
       length: 5,

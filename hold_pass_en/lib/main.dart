@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_it/get_it.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hold_pass_en/presentation/bloc/home/home_bloc.dart';
+import 'package:hold_pass_en/presentation/bloc/password/password_bloc.dart';
 import 'package:hold_pass_en/presentation/pages/splash.dart';
-import 'package:hold_pass_en/presentation/provider/pass_provider.dart';
-import 'package:provider/provider.dart';
 import 'inject_container.dart' as di;
 
 void main() async {
@@ -11,9 +13,16 @@ void main() async {
   di.init();
 
   runApp(
-    ChangeNotifierProvider(
-      create: (context) => PassProvider(),
-      child: const MyApp(),
+    MultiBlocProvider(
+      providers: [
+        BlocProvider<PasswordBloc>(
+          create: (c) => PasswordBloc()
+        ),
+        BlocProvider<HomeBloc>(
+          create: (c) => HomeBloc()
+        ),
+      ],
+      child: const MyApp()
     )
   );
 }

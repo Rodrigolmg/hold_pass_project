@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:hold_pass_en/domain/entities/password.dart';
 import 'package:hold_pass_en/presentation/components/pass_info_tile.dart';
-import 'package:hold_pass_en/data/models/password_model.dart';
 import 'package:hold_pass_en/core/util/action_type.dart';
 import 'package:hold_pass_en/core/util/pass_type_name.dart';
 import 'package:hold_pass_en/core/util/string_extension.dart';
 
 class PassCardAlert extends StatelessWidget {
   
-  final PasswordModel? password;
+  final Password? password;
   final ActionType actionType;
   final Function? callback;
 

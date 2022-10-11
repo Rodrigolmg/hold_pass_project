@@ -7,15 +7,15 @@ class Password extends Equatable{
 
   int? id;
 
-  final PassType? passType;
-  final String? itemNamePass;
-  final String? email;
-  final String? username;
-  final String? nickname;
-  final String? password;
-  final String? numId;
-  final String? pin;
-  final bool? isAuth;
+  PassType? passType;
+  String? itemNamePass;
+  String? email;
+  String? username;
+  String? nickname;
+  String? password;
+  String? numId;
+  String? pin;
+  bool? isAuth;
 
   Password({
     this.id,

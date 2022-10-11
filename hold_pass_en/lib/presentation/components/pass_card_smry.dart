@@ -1,9 +1,9 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:hold_pass_en/domain/entities/password.dart';
 import 'package:hold_pass_en/presentation/components/pass_card_alert.dart';
 import 'package:hold_pass_en/presentation/components/pass_card_info.dart';
-import 'package:hold_pass_en/data/models/password_model.dart';
 import 'package:hold_pass_en/presentation/provider/pass_provider.dart';
 import 'package:hold_pass_en/core/util/action_type.dart';
 import 'package:hold_pass_en/core/util/pass_type.dart';
@@ -12,13 +12,13 @@ import 'package:provider/provider.dart';
 
 class PassCardSmry extends StatefulWidget {
 
-  final PasswordModel? passwordModel;
+  final Password? password;
   final int? delay;
   final Function? reloadListCallback;
 
   const PassCardSmry({
     Key? key,
-    @required this.passwordModel,
+    @required this.password,
     @required this.reloadListCallback,
     this.delay
   }) : super(key: key);
@@ -95,7 +95,7 @@ class _PassCardSmryState extends State<PassCardSmry>
                           return Transform.scale(
                             scale: curve,
                             child: PassCardInfo(
-                              passwordModel: widget.passwordModel!
+                              password: widget.password!
                             ),
                           );
                         },
@@ -106,19 +106,19 @@ class _PassCardSmryState extends State<PassCardSmry>
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(widget.passwordModel!.itemNamePass!.capitalize()),
+                        Text(widget.password!.itemNamePass!.capitalize()),
                         const SizedBox(
                           height: .8,
                         ),
-                        Text(_getLabel(widget.passwordModel!.passType!))
+                        Text(_getLabel(widget.password!.passType!))
                       ],
                     ),
                   ),
                 ),
                 IconButton(
                     onPressed: (){
-                      passProvider
-                          .setPasswordToDelete(widget.passwordModel!);
+                      // passProvider
+                      //     .setPasswordToDelete(widget.password!);
                       showGeneralDialog(
                           context: context,
                           pageBuilder: (context, a1, a2) => Container(),
@@ -129,7 +129,7 @@ class _PassCardSmryState extends State<PassCardSmry>
                               scale: curve,
                               child: PassCardAlert(
                                   actionType: ActionType.delete,
-                                  password: widget.passwordModel!,
+                                  password: widget.password!,
                                   callback: () {
                                     passProvider.deletePassword();
                                     widget.reloadListCallback!();
@@ -156,12 +156,12 @@ class _PassCardSmryState extends State<PassCardSmry>
     switch(type){
       case PassType.email:
       case PassType.other:
-        return 'E-mail: ${widget.passwordModel!.email}';
+        return 'E-mail: ${widget.password!.email}';
       case PassType.website:
       case PassType.app:
-        return 'Username: ${widget.passwordModel!.username}';
+        return 'Username: ${widget.password!.username}';
       case PassType.game:
-        return 'Nickname: ${widget.passwordModel!.nickname}';
+        return 'Nickname: ${widget.password!.nickname}';
     }
   }
 }

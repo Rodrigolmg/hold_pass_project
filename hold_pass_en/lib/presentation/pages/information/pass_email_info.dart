@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hold_pass_en/core/util/pass_type.dart';
+import 'package:hold_pass_en/domain/entities/password.dart';
+import 'package:hold_pass_en/presentation/bloc/password/password_bloc.dart';
 import 'package:hold_pass_en/presentation/components/pass_card_smry.dart';
-import 'package:hold_pass_en/data/models/password_model.dart';
 import 'package:hold_pass_en/presentation/pages/pass_loading.dart';
-import 'package:hold_pass_en/presentation/provider/pass_provider.dart';
-import 'package:provider/provider.dart';
 
 class PassEmailInfo extends StatefulWidget {
   const PassEmailInfo({Key? key}) : super(key: key);
@@ -21,48 +22,51 @@ class _PassEmailInfoState extends State<PassEmailInfo>{
 
     return Padding(
       padding: const EdgeInsets.only(top: 15),
-      child: Consumer<PassProvider>(
-        builder: (context, passProvider, child) => FutureBuilder(
-           future: Future<List<PasswordModel>>.value(passProvider.getEmails),
-           builder: (context, snap){
-             if(snap.hasData){
+      child: BlocBuilder<PasswordBloc, PasswordState>(
+        builder: (context, state) {
 
-               List<PasswordModel> list = snap.data as List<PasswordModel>;
+          if(state is PasswordListLoading){
+            return const PassLoading();
+          }
 
-               if(list.isEmpty) {
-                 return const Center(
-                   child: Text(
-                     'No e-mail registered',
-                     style: TextStyle(
-                         fontWeight: FontWeight.bold,
-                         fontSize: 20
-                     ),
-                   ),
-                 );
-               }
+          if(state is EmptyPasswordList){
+            return const Center(
+              child: Text(
+                'No e-mail registered',
+                style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20
+                ),
+              ),
+            );
+          }
 
-               return ListView.separated(
-                   itemCount: list.length,
-                   separatorBuilder: (context, i) => const Divider(),
-                   itemBuilder: (_, i) {
-                     _delay = _delay + 100;
-                     return Padding(
-                       padding: const EdgeInsets.only(bottom: 8.0),
-                       child: PassCardSmry(
-                         reloadListCallback: (){
-                           passProvider.reloadEmailList();
-                         },
-                         passwordModel: list[i],
-                         delay: _delay,
-                       ),
-                     );
-                   }
-               );
-             }
+          if(state is PasswordListLoaded){
 
-             return const PassLoading();
-           }
-         )
+            List<Password>? list = state.passwords;
+
+            return ListView.separated(
+                itemCount: list!.length,
+                separatorBuilder: (context, i) => const Divider(),
+                itemBuilder: (_, i) {
+                  _delay = _delay + 100;
+                  return Padding(
+                    padding: const EdgeInsets.only(bottom: 8.0),
+                    child: PassCardSmry(
+                      reloadListCallback: (){
+                        context.read<PasswordBloc>()
+                            .add(FetchPasswordListEvent().call(PassType.email));
+                      },
+                      password: list[i],
+                      delay: _delay,
+                    ),
+                  );
+                }
+            );
+          }
+
+          return const PassLoading();
+        }
       ),
     );
   }

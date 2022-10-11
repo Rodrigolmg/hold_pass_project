@@ -1,17 +1,29 @@
+// ignore_for_file: must_be_immutable
+
 import 'package:flutter/material.dart';
-import 'package:hold_pass_en/presentation/provider/pass_provider.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hold_pass_en/presentation/bloc/password/password_bloc.dart';
 import 'package:hold_pass_en/core/util/pass_type.dart';
-import 'package:provider/provider.dart';
 
 class PassTypeList extends StatelessWidget {
-  const PassTypeList({Key? key}) : super(key: key);
+
+  PassTypeList({Key? key,}) : super(key: key);
+
+  PassType? _passType = PassType.email;
+
+  void _getPassTypeValue(context, PasswordState state){
+    if(state is PassTypeFilled){
+      _passType = const PassTypeFilled().passtType;
+    } else {
+      _passType = PassType.email;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
 
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
-
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -24,13 +36,14 @@ class PassTypeList extends StatelessWidget {
         ),
         SizedBox(
           height: height * .08,
-          child: Consumer<PassProvider>(
-            builder: (context, passProvider, _) => DropdownButton<PassType>(
+          child: BlocListener<PasswordBloc, PasswordState>(
+            listener: _getPassTypeValue,
+            child: DropdownButton<PassType>(
                 underline: Container(
                   height: .8,
                   color: Colors.orangeAccent,
                 ),
-                value: passProvider.getPassType,
+                value: _passType,
                 isExpanded: true,
                 icon: const Icon(
                   Icons.arrow_downward,
@@ -101,7 +114,8 @@ class PassTypeList extends StatelessWidget {
                     ),
                   )
                 ],
-                onChanged: passProvider.setType
+                onChanged: (passType) => context.read<PasswordBloc>()
+                    .add(SelectPassTypeEvent().call(passType!))
             ),
           ),
         )

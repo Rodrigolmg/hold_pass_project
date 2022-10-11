@@ -1,27 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+
 // ignore: must_be_immutable
 class PassTextField extends StatelessWidget {
 
   Widget? suffixWidget;
   String? label;
   bool obscureText;
-  Function(String)? onChange;
   TextInputType keyboardType;
   String? Function(String?)? validator;
   List<TextInputFormatter>? inputFormatters;
   TextEditingController? textEditingController;
+  Function(String)? onChange;
 
   PassTextField({Key? key,
     this.suffixWidget,
-    @required this.label,
+    required this.label,
     this.obscureText = false,
-    @required this.onChange,
     this.keyboardType = TextInputType.text,
     this.validator,
     this.inputFormatters,
-    @required this.textEditingController
+    required this.textEditingController,
+    required this.onChange
   }) : super(key: key);
 
   @override
