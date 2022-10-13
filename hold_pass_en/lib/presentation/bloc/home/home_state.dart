@@ -2,7 +2,7 @@ part of 'home_bloc.dart';
 
 abstract class HomeState extends Equatable {
 
-  IconData? get icon;
+  IconData get icon;
   int get pageIndex;
   double get iconHeightValue;
 
@@ -14,14 +14,14 @@ class HomeInitial extends HomeState {
   List<Object> get props => [];
 
   @override
-  IconData? get icon => null;
+  IconData get icon => Icons.save;
 
   @override
   // TODO: implement pageIndex
   int get pageIndex => 0;
 
   @override
-  double get iconHeightValue => .0;
+  double get iconHeightValue => 25.0;
 }
 
 class PasswordsRegisterSelected extends HomeState {

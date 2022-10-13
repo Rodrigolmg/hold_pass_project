@@ -2,9 +2,9 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:hold_pass_en/domain/entities/password.dart';
+import 'package:hold_pass_en/presentation/bloc/password/password_bloc.dart';
 import 'package:hold_pass_en/presentation/components/pass_card_alert.dart';
 import 'package:hold_pass_en/presentation/components/pass_card_info.dart';
-import 'package:hold_pass_en/presentation/provider/pass_provider.dart';
 import 'package:hold_pass_en/core/util/action_type.dart';
 import 'package:hold_pass_en/core/util/pass_type.dart';
 import 'package:hold_pass_en/core/util/string_extension.dart';
@@ -67,10 +67,6 @@ class _PassCardSmryState extends State<PassCardSmry>
 
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
-    PassProvider passProvider = Provider.of<PassProvider>(
-      context,
-      listen: false
-    );
 
     return FadeTransition(
       opacity: _controller!,
@@ -131,7 +127,10 @@ class _PassCardSmryState extends State<PassCardSmry>
                                   actionType: ActionType.delete,
                                   password: widget.password!,
                                   callback: () {
-                                    passProvider.deletePassword();
+                                    context.read<PasswordBloc>().
+                                        add(DeletePasswordEvent()
+                                          .call(widget.password!)
+                                    );
                                     widget.reloadListCallback!();
                                   }
                               ),

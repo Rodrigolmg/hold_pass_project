@@ -19,5 +19,31 @@ class ChangePageEvent extends HomeEvent {
 
 }
 
+class RegisterPageSelectEvent extends HomeEvent {
+
+  final double? iconHeight;
+
+  const RegisterPageSelectEvent({
+    this.iconHeight,
+  });
+
+  @override
+  List<Object?> get props => [iconHeight];
+
+}
+
+class InfoPageSelectEvent extends HomeEvent {
+
+  final double? iconHeight;
+
+  const InfoPageSelectEvent({
+    this.iconHeight,
+  });
+
+  @override
+  List<Object?> get props => [iconHeight];
+
+}
+
 
 

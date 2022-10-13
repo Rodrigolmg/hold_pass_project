@@ -10,9 +10,17 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     on<HomeEvent>((event, emit) {
     });
 
-    on<ChangePageEvent>((event, emit) {
+    on<RegisterPageSelectEvent>((event, emit) {
       emit(
         PasswordsRegisterSelected(
+          iconHeight: event.iconHeight,
+        )
+      );
+    });
+
+    on<InfoPageSelectEvent>((event, emit) {
+      emit(
+        PasswordsInformationSelected(
           iconHeight: event.iconHeight,
         )
       );
