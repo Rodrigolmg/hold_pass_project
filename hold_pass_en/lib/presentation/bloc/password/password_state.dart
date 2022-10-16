@@ -14,8 +14,9 @@ class Empty extends PasswordState {
 class PasswordListLoading extends PasswordState {
 
   final PassType? passType;
+  final List<Password>? passList;
 
-  const PasswordListLoading({@required this.passType});
+  const PasswordListLoading({@required this.passType, this.passList});
 
   @override
   List<Object> get props => [passType!];
@@ -24,12 +25,11 @@ class PasswordListLoading extends PasswordState {
 class PasswordListLoaded extends PasswordState {
 
   final List<Password>? passwords;
-  final PassType? passType;
 
-  const PasswordListLoaded({@required this.passwords, @required this.passType});
+  const PasswordListLoaded({@required this.passwords});
 
   @override
-  List<Object> get props => [passwords!, passType!];
+  List<Object> get props => [passwords!];
 }
 
 class EmptyPasswordList extends PasswordState {

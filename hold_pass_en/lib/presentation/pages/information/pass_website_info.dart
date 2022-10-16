@@ -55,7 +55,9 @@ class _PassWebsiteInfoState extends State<PassWebsiteInfo> {
                       child: PassCardSmry(
                         reloadListCallback: (){
                           context.read<PasswordBloc>()
-                              .add(FetchPasswordListEvent().call(PassType.website));
+                            .add(const FetchPasswordListEvent(
+                              passType: PassType.website
+                          ));
                         },
                         password: list[i],
                         delay: _delay,

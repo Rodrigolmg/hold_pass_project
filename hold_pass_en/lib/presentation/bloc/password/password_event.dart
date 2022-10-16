@@ -4,17 +4,13 @@ part of 'password_bloc.dart';
 
 abstract class PasswordEvent<T> extends Equatable {
   const PasswordEvent();
-  call(T value);
 }
 
 class SeePasswordTextEvent extends PasswordEvent<bool>{
 
-  bool? isObscured;
+  final bool? isObscured;
 
-  @override
-  call(bool value) {
-    isObscured = value;
-  }
+  const SeePasswordTextEvent({this.isObscured});
 
   @override
   // TODO: implement props
@@ -24,40 +20,31 @@ class SeePasswordTextEvent extends PasswordEvent<bool>{
 
 class ConfirmPasswordRegisterEvent extends PasswordEvent<Password>{
 
-  Password? passToRegister;
+  final Password? passToRegister;
+
+  const ConfirmPasswordRegisterEvent({this.passToRegister});
 
   @override
   List<Object?> get props => [passToRegister];
-
-  @override
-  call(Password value) {
-    passToRegister = value;
-  }
 
 }
 
 class RegisterPasswordEvent extends PasswordEvent<Password>{
 
-  Password? passReadyToRegister;
+  final Password? passReadyToRegister;
+
+  const RegisterPasswordEvent({this.passReadyToRegister});
 
   @override
   List<Object?> get props => [passReadyToRegister];
-
-  @override
-  call(Password value) {
-    passReadyToRegister = value;
-  }
 
 }
 
 class DeletePasswordEvent extends PasswordEvent<Password>{
 
-  Password? passToDelete;
+  final Password? passToDelete;
 
-  @override
-  call(Password value) {
-    passToDelete = value;
-  }
+  const DeletePasswordEvent({this.passToDelete});
 
   @override
   List<Object?> get props => [passToDelete];
@@ -66,26 +53,20 @@ class DeletePasswordEvent extends PasswordEvent<Password>{
 
 class SelectPassToEditEvent extends PasswordEvent<Password>{
 
-  Password? passSelected;
+  final Password? passSelected;
+
+  const SelectPassToEditEvent({this.passSelected});
 
   @override
-  call(Password value) {
-    passSelected = value;
-  }
-
-  @override
-  List<Object?> get props => throw UnimplementedError();
+  List<Object?> get props => [passSelected];
 
 }
 
 class ConfirmPasswordEditEvent extends PasswordEvent<Password>{
 
-  Password? passToEdit;
+  final Password? passToEdit;
 
-  @override
-  call(Password value) {
-    passToEdit = value;
-  }
+  const ConfirmPasswordEditEvent({this.passToEdit});
 
   @override
   List<Object?> get props => [passToEdit];
@@ -94,26 +75,49 @@ class ConfirmPasswordEditEvent extends PasswordEvent<Password>{
 
 class FetchPasswordListEvent extends PasswordEvent<PassType>{
 
-  PassType? passType;
+  final PassType? passType;
 
-  @override
-  call(PassType value) {
-    passType = value;
-  }
+  const FetchPasswordListEvent({this.passType});
 
   @override
   List<Object?> get props => [passType];
 
 }
 
-class ReloadPasswordListEvent extends PasswordEvent<Password>{
+class PasswordListLoadedEvent extends PasswordEvent<List<Password>>{
 
-  Password? password;
+  final List<Password>? passwords;
+
+  const PasswordListLoadedEvent({this.passwords});
 
   @override
-  call(Password value) {
-    password = value;
-  }
+  List<Object?> get props => [passwords];
+
+}
+
+class LoadPasswordListEvent extends PasswordEvent<PassType>{
+
+  final PassType? passType;
+
+  const LoadPasswordListEvent({this.passType});
+
+  @override
+  List<Object?> get props => [passType];
+
+}
+
+class EmptyPasswordListEvent extends PasswordEvent<Void>{
+
+  @override
+  List<Object?> get props => [];
+
+}
+
+class ReloadPasswordListEvent extends PasswordEvent<Password>{
+
+  final Password? password;
+
+  const ReloadPasswordListEvent({this.password});
 
   @override
   List<Object?> get props => [password];
@@ -122,14 +126,9 @@ class ReloadPasswordListEvent extends PasswordEvent<Password>{
 
 class SelectPassTypeEvent extends PasswordEvent<PassType> {
 
-  PassType? passType;
+  final PassType passType;
 
-  SelectPassTypeEvent();
-
-  @override
-  call(PassType value) {
-    passType = value;
-  }
+  const SelectPassTypeEvent({this.passType = PassType.email});
 
   @override
   List<Object?> get props => [passType];
@@ -138,12 +137,9 @@ class SelectPassTypeEvent extends PasswordEvent<PassType> {
 
 class FillItemNameEvent extends PasswordEvent<String> {
 
-  String itemName = '-';
+  final String itemName;
 
-  @override
-  call(String value) {
-    itemName = value;
-  }
+  const FillItemNameEvent({this.itemName = '-'});
 
   @override
   List<Object?> get props => [itemName];
@@ -152,27 +148,20 @@ class FillItemNameEvent extends PasswordEvent<String> {
 
 class FillEmailEvent extends PasswordEvent<String> {
 
-  String email = '-';
+  final String email;
+
+  const FillEmailEvent({this.email = '-'});
 
   @override
-  call(String value) {
-    email = value;
-  }
-
-  @override
-  // TODO: implement props
   List<Object?> get props => [email];
 
 }
 
 class FillUsernameEvent extends PasswordEvent<String> {
 
-  String username = '-';
+  final String username;
 
-  @override
-  call(String value) {
-    username = value;
-  }
+  const FillUsernameEvent({this.username = '-'});
 
   @override
   List<Object?> get props => [username];
@@ -181,12 +170,9 @@ class FillUsernameEvent extends PasswordEvent<String> {
 
 class FillNicknameEvent extends PasswordEvent<String> {
 
-  String nickname = '-';
+ final String nickname;
 
-  @override
-  call(String value) {
-    nickname = value;
-  }
+ const FillNicknameEvent({this.nickname = '-'});
 
   @override
   List<Object?> get props => [nickname];
@@ -195,27 +181,20 @@ class FillNicknameEvent extends PasswordEvent<String> {
 
 class FillPasswordEvent extends PasswordEvent<String> {
 
-  String password = '-';
+  final String password;
+
+  const FillPasswordEvent({required this.password});
 
   @override
-  call(String value) {
-    password = value;
-  }
-
-  @override
-  // TODO: implement props
   List<Object?> get props => [password];
 
 }
 
 class FillNumIdEvent extends PasswordEvent<String> {
 
-  String numId = '-';
+  final String numId;
 
-  @override
-  call(String value) {
-    numId = value;
-  }
+  const FillNumIdEvent({this.numId = '-'});
 
   @override
   List<Object?> get props => [numId];
@@ -224,12 +203,9 @@ class FillNumIdEvent extends PasswordEvent<String> {
 
 class FillPinEvent extends PasswordEvent<String> {
 
-  String pin = '-';
+  final String pin;
 
-  @override
-  call(String value) {
-    pin = value;
-  }
+  const FillPinEvent({this.pin = '-'});
 
   @override
   List<Object?> get props => [pin];
@@ -238,12 +214,9 @@ class FillPinEvent extends PasswordEvent<String> {
 
 class FillAuthEvent extends PasswordEvent<bool> {
 
-  bool isAuth = false;
+  final bool isAuth;
 
-  @override
-  call(bool value) {
-    isAuth = value;
-  }
+  const FillAuthEvent({this.isAuth = false});
 
   @override
   List<Object?> get props => [isAuth];
@@ -252,12 +225,9 @@ class FillAuthEvent extends PasswordEvent<bool> {
 
 class CancelPasswordEdit extends PasswordEvent<double>{
 
-  double? iconHeight;
+  final double? iconHeight;
 
-  @override
-  call(double value) {
-    iconHeight = value;
-  }
+  const CancelPasswordEdit({this.iconHeight});
 
   @override
   List<Object?> get props => [iconHeight];

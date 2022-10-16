@@ -55,7 +55,10 @@ class _PassEmailInfoState extends State<PassEmailInfo>{
                     child: PassCardSmry(
                       reloadListCallback: (){
                         context.read<PasswordBloc>()
-                            .add(FetchPasswordListEvent().call(PassType.email));
+                            .add(const FetchPasswordListEvent(
+                              passType: PassType.email
+                            )
+                        );
                       },
                       password: list[i],
                       delay: _delay,

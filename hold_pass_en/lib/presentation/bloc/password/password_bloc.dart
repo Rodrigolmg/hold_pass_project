@@ -1,25 +1,34 @@
+import 'dart:ffi';
+
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import 'package:hold_pass_en/core/util/pass_converter.dart';
 import 'package:hold_pass_en/core/util/pass_type.dart';
 import 'package:hold_pass_en/domain/entities/password.dart';
+import 'package:hold_pass_en/domain/usecases/delete_password_usecase.dart';
+import 'package:hold_pass_en/domain/usecases/get_passwords_usecase.dart';
+import 'package:hold_pass_en/domain/usecases/register_password_usecase.dart';
 import 'package:hold_pass_en/domain/usecases/usecase.dart';
 
 part 'password_event.dart';
 part 'password_state.dart';
 
 class PasswordBloc extends Bloc<PasswordEvent, PasswordState> {
-  final UseCase? useCase;
-  final PassConverter? converter;
+  UseCase? _useCase;
+  PassConverter? _converter;
 
-  PasswordBloc({this.useCase, this.converter}) : super(Empty()){
+  PasswordBloc() : super(Empty()){
     on<RegisterPasswordEvent>(_onRegisterPass);
     on<ConfirmPasswordRegisterEvent>(_onConfirmRegister);
     on<DeletePasswordEvent>(_onDeletePass);
     on<SelectPassToEditEvent>(_onSelectingPassToEdit);
     on<ConfirmPasswordEditEvent>(_onEditPass);
     on<FetchPasswordListEvent>(_onFetchPasswords);
+    on<PasswordListLoadedEvent>(_onPasswordsLoaded);
+    on<LoadPasswordListEvent>(_onLoadPasswordList);
+    on<EmptyPasswordListEvent>(_onEmptyPasswords);
     on<SelectPassTypeEvent>(_onSelectPassType);
     on<FillItemNameEvent>(_onFillItemNameEvent);
     on<FillEmailEvent>(_onFillEmailEvent);
@@ -40,15 +49,16 @@ class PasswordBloc extends Bloc<PasswordEvent, PasswordState> {
   }
 
   void _onRegisterPass(RegisterPasswordEvent event, Emitter emitter) {
-
-    useCase!(event.passReadyToRegister);
+    _useCase = GetIt.I.get<RegisterPasswordUsecase>();
+    _useCase!(event.passReadyToRegister);
     emitter(
         PasswordRegistered(passwordRegistered: event.passReadyToRegister)
     );
   }
 
   void _onDeletePass(DeletePasswordEvent event, Emitter emitter) {
-    useCase!(event.passToDelete);
+    _useCase = GetIt.I.get<DeletePasswordUsecase>();
+    _useCase!(event.passToDelete);
     emitter(
         PasswordDeleted(passwordDeleted: event.passToDelete)
     );
@@ -70,9 +80,33 @@ class PasswordBloc extends Bloc<PasswordEvent, PasswordState> {
     );
   }
 
+  void _onPasswordsLoaded(PasswordListLoadedEvent event, Emitter emit) {
+    emit(
+      PasswordListLoaded(passwords: event.passwords)
+    );
+  }
+
+  void _onEmptyPasswords(EmptyPasswordListEvent event, Emitter emit) {
+    emit(
+        EmptyPasswordList()
+    );
+  }
+
+  void _onLoadPasswordList(LoadPasswordListEvent event, Emitter emit) async {
+    _useCase = GetIt.I.get<GetPasswordsUsecase>();
+    List<Password> passwords = await _useCase!(event.passType);
+
+    emit(
+      PasswordListLoading(
+        passType: event.passType,
+        passList: passwords
+      )
+    );
+  }
+
   void _onSelectPassType(SelectPassTypeEvent event, Emitter emit) {
     emit(
-        PassTypeFilled(passtType: event.passType!)
+        PassTypeFilled(passtType: event.passType)
     );
   }
 

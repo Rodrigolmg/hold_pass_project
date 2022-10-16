@@ -17,7 +17,6 @@ class HomeInitial extends HomeState {
   IconData get icon => Icons.save;
 
   @override
-  // TODO: implement pageIndex
   int get pageIndex => 0;
 
   @override

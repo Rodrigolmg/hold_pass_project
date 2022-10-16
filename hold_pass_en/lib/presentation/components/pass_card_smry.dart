@@ -128,8 +128,9 @@ class _PassCardSmryState extends State<PassCardSmry>
                                   password: widget.password!,
                                   callback: () {
                                     context.read<PasswordBloc>().
-                                        add(DeletePasswordEvent()
-                                          .call(widget.password!)
+                                        add(DeletePasswordEvent(
+                                          passToDelete: widget.password!
+                                        )
                                     );
                                     widget.reloadListCallback!();
                                   }

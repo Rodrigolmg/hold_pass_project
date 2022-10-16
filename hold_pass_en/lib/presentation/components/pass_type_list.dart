@@ -115,7 +115,7 @@ class PassTypeList extends StatelessWidget {
                   )
                 ],
                 onChanged: (passType) => context.read<PasswordBloc>()
-                    .add(SelectPassTypeEvent().call(passType!))
+                    .add(SelectPassTypeEvent(passType: passType!))
             ),
           ),
         )

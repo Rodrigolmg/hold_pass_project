@@ -59,7 +59,9 @@ class _PassGameInfoState extends State<PassGameInfo> {
                         reloadListCallback: (){
                           context.read<PasswordBloc>()
                               .add(
-                                FetchPasswordListEvent().call(PassType.game)
+                                const FetchPasswordListEvent(
+                                  passType: PassType.game
+                                )
                           );
                         },
                         password: list[i],

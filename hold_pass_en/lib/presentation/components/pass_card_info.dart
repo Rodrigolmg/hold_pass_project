@@ -90,7 +90,7 @@ class PassCardInfo extends StatelessWidget {
         TextButton(
             onPressed: (){
               context.read<PasswordBloc>().add(
-                SelectPassToEditEvent().call(password!)
+                SelectPassToEditEvent(passSelected: password!)
               );
               // passProvider.setPasswordToEdit(password!);
               Navigator.of(context).pop();

@@ -101,7 +101,7 @@ class _PassRegisterState extends State<PassRegister> {
                   },
                   onChange: (value){
                     context.read<PasswordBloc>()
-                        .add(FillItemNameEvent().call(value));
+                        .add(FillItemNameEvent(itemName: value));
                   },
                   textEditingController: _itemNameController,
                 ),
@@ -151,7 +151,7 @@ class _PassRegisterState extends State<PassRegister> {
                   },
                   onChange: (value){
                     context.read<PasswordBloc>()
-                        .add(FillEmailEvent().call(value));
+                        .add(FillEmailEvent(email: value));
                   },
                 ),
               ),
@@ -182,7 +182,7 @@ class _PassRegisterState extends State<PassRegister> {
                   ),
                   onChange: (value){
                     context.read<PasswordBloc>()
-                        .add(FillUsernameEvent().call(value));
+                        .add(FillUsernameEvent(username: value));
                   },
                 ),
               ),
@@ -227,7 +227,7 @@ class _PassRegisterState extends State<PassRegister> {
                   },
                   onChange: (value){
                     context.read<PasswordBloc>()
-                        .add(FillNicknameEvent().call(value));
+                        .add(FillNicknameEvent(nickname: value));
                   },
                 ),
               ),
@@ -252,7 +252,7 @@ class _PassRegisterState extends State<PassRegister> {
                   keyboardType: TextInputType.number,
                   onChange: (value){
                     context.read<PasswordBloc>()
-                        .add(FillNumIdEvent().call(value));
+                        .add(FillNumIdEvent(numId: value));
                   },
                 ),
               ),
@@ -277,7 +277,7 @@ class _PassRegisterState extends State<PassRegister> {
                   keyboardType: TextInputType.number,
                   onChange: (value){
                     context.read<PasswordBloc>()
-                        .add(FillPinEvent().call(value));
+                        .add(FillPinEvent(pin: value));
                   }
                 ),
               ),
@@ -308,8 +308,7 @@ class _PassRegisterState extends State<PassRegister> {
                   suffixWidget: IconButton(
                       onPressed: (){
                         context.read<PasswordBloc>()
-                            .add(SeePasswordTextEvent()
-                            .call(!_obscureText));
+                            .add(SeePasswordTextEvent(isObscured: _obscureText));
                       },
                       splashColor: Colors.transparent,
                       icon: Icon(_obscureText ? Icons.visibility
@@ -322,7 +321,7 @@ class _PassRegisterState extends State<PassRegister> {
                   },
                   onChange: (value){
                     context.read<PasswordBloc>()
-                        .add(FillPasswordEvent().call(value));
+                        .add(FillPasswordEvent(password: value));
                   },
                 ),
               ),

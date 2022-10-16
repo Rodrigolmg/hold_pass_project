@@ -188,11 +188,11 @@ class _HomeState extends State<Home>{
                   onPressed: () async {
                     if(_isEditing) {
                       context.read<PasswordBloc>().add(
-                          CancelPasswordEdit().call(.0)
+                        const CancelPasswordEdit(iconHeight: .0)
                       );
                       Timer(const Duration(milliseconds: 450), () {
                         context.read<PasswordBloc>().add(
-                            CancelPasswordEdit().call(25.0)
+                          const CancelPasswordEdit(iconHeight: 25.0)
                         );
                       });
                     }
@@ -255,13 +255,14 @@ class _HomeState extends State<Home>{
     switch(actionType){
       case ActionType.register:
         context.read<PasswordBloc>().add(
-            ConfirmPasswordRegisterEvent().call(_passToRegister!)
+            ConfirmPasswordRegisterEvent(passToRegister: _passToRegister!)
         );
         _showDialog(
           _passToRegister,
           (){
-            context.read<PasswordBloc>().add(RegisterPasswordEvent()
-                .call(_passToRegister!));
+            context.read<PasswordBloc>().add(RegisterPasswordEvent(
+                passReadyToRegister: _passToRegister!
+            ));
             // Reload event
           }
         );
