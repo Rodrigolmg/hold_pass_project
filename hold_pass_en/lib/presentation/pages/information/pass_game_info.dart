@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hold_pass_en/core/util/pass_type.dart';
 import 'package:hold_pass_en/domain/entities/password.dart';
-import 'package:hold_pass_en/presentation/bloc/password/password_bloc.dart';
-import 'package:hold_pass_en/presentation/components/pass_card_info.dart';
+import 'package:hold_pass_en/presentation/bloc/password/information/pass_information_bloc.dart';
 import 'package:hold_pass_en/presentation/components/pass_card_smry.dart';
 import 'package:hold_pass_en/data/models/password_model.dart';
 import 'package:hold_pass_en/presentation/pages/pass_loading.dart';
@@ -25,7 +24,7 @@ class _PassGameInfoState extends State<PassGameInfo> {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(top: 15),
-      child: BlocBuilder<PasswordBloc, PasswordState>(
+      child: BlocBuilder<PassInformationBloc, PassInformationState>(
           builder: (c, state) {
 
             if(state is PasswordListLoading){
@@ -57,9 +56,9 @@ class _PassGameInfoState extends State<PassGameInfo> {
                       padding: const EdgeInsets.only(bottom: 8.0),
                       child: PassCardSmry(
                         reloadListCallback: (){
-                          context.read<PasswordBloc>()
+                          context.read<PassInformationBloc>()
                               .add(
-                                const FetchPasswordListEvent(
+                                const LoadPasswordListEvent(
                                   passType: PassType.game
                                 )
                           );

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hold_pass_en/domain/entities/password.dart';
-import 'package:hold_pass_en/presentation/bloc/password/password_bloc.dart';
+import 'package:hold_pass_en/presentation/bloc/home/home_bloc.dart';
 import 'package:hold_pass_en/presentation/components/pass_info_tile.dart';
 import 'package:hold_pass_en/core/util/string_extension.dart';
 import 'package:provider/provider.dart';
@@ -16,9 +16,6 @@ class PassCardInfo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
-    // PassProvider passProvider =
-    //   Provider.of<PassProvider>(context, listen: false);
 
     return AlertDialog(
       elevation: 8,
@@ -89,13 +86,14 @@ class PassCardInfo extends StatelessWidget {
         ),
         TextButton(
             onPressed: (){
-              context.read<PasswordBloc>().add(
-                SelectPassToEditEvent(passSelected: password!)
+              context.read<HomeBloc>().add(
+                SelectPassToEditEvent(
+                  passSelected: password!,
+                  offset: .0,
+                  iconHeight: 0
+                )
               );
-              // passProvider.setPasswordToEdit(password!);
               Navigator.of(context).pop();
-
-              // passProvider.animateToPage(0);
             },
             child: const Text(
               'Edit',

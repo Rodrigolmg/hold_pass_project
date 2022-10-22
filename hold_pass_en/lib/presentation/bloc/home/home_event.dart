@@ -45,5 +45,34 @@ class InfoPageSelectEvent extends HomeEvent {
 
 }
 
+// PASSWORD EDIT EVENT
+class SelectPassToEditEvent extends HomeEvent{
+
+  final Password? passSelected;
+  final double? offset;
+  final double iconHeight;
+
+  const SelectPassToEditEvent({
+    this.passSelected,
+    this.offset,
+    required this.iconHeight
+  });
+
+  @override
+  List<Object?> get props => [passSelected, offset, iconHeight];
+
+}
+
+class CancelPasswordEditEvent extends HomeEvent{
+
+  final double iconHeight;
+
+  const CancelPasswordEditEvent({required this.iconHeight});
+
+  @override
+  List<Object?> get props => [iconHeight];
+
+}
+
 
 

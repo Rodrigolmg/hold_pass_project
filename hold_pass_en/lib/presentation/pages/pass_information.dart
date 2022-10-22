@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hold_pass_en/core/util/pass_type.dart';
-import 'package:hold_pass_en/presentation/bloc/password/password_bloc.dart';
+import 'package:hold_pass_en/presentation/bloc/password/information/pass_information_bloc.dart';
 import 'package:hold_pass_en/presentation/pages/information/pass_app_info.dart';
 import 'package:hold_pass_en/presentation/pages/information/pass_email_info.dart';
 import 'package:hold_pass_en/presentation/pages/information/pass_game_info.dart';
@@ -52,14 +52,14 @@ class _PassInformationState extends State<PassInformation> {
   @override
   Widget build(BuildContext context) {
 
-    return BlocListener<PasswordBloc, PasswordState>(
+    return BlocListener<PassInformationBloc, PassInformationState>(
       listener: (context, state){
         if(state is PasswordListLoading){
           if(state.passList != null){
             if(state.passList!.isEmpty){
-              context.read<PasswordBloc>().add(EmptyPasswordListEvent());
+              context.read<PassInformationBloc>().add(EmptyPasswordListEvent());
             } else {
-              context.read<PasswordBloc>().add(
+              context.read<PassInformationBloc>().add(
                 PasswordListLoadedEvent(passwords: state.passList!)
               );
             }
@@ -73,8 +73,10 @@ class _PassInformationState extends State<PassInformation> {
               unselectedLabelColor: Colors.brown,
               indicatorColor: Colors.orangeAccent,
               onTap: (index) {
-                context.read<PasswordBloc>()
-                    .add(LoadPasswordListEvent(passType: _getPassType(index + 1)));
+                context.read<PassInformationBloc>()
+                    .add(LoadPasswordListEvent(
+                      passType: _getPassType(index + 1))
+                );
                 _onPageChange(index);
               },
               tabs: const [

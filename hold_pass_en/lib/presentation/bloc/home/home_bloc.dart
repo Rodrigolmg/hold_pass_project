@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:hold_pass_en/core/util/pass_type.dart';
+import 'package:hold_pass_en/domain/entities/password.dart';
 
 part 'home_event.dart';
 part 'home_state.dart';
@@ -25,5 +27,25 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         )
       );
     });
+
+    on<SelectPassToEditEvent>(_onPassToEditSelected);
+    on<CancelPasswordEditEvent>(_onCancelPasswordEdit);
   }
+
+  void _onPassToEditSelected(SelectPassToEditEvent event, Emitter emit){
+    emit(
+        PasswordSelected(
+          passwordSelection: event.passSelected,
+          offset: event.offset,
+          iconHeight: event.iconHeight
+        )
+    );
+  }
+
+  void _onCancelPasswordEdit(CancelPasswordEditEvent event, Emitter emit){
+    emit(
+        PasswordEditCancelled(iconHeight: event.iconHeight)
+    );
+  }
+
 }

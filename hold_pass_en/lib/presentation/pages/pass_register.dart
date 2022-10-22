@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
-import 'package:hold_pass_en/presentation/bloc/password/password_bloc.dart';
+import 'package:hold_pass_en/presentation/bloc/password/register/pass_register_bloc.dart';
 import 'package:hold_pass_en/presentation/components/pass_about_field_info.dart';
 import 'package:hold_pass_en/presentation/components/pass_textfield.dart';
 import 'package:hold_pass_en/presentation/components/pass_type_list.dart';
@@ -18,9 +18,9 @@ class PassRegister extends StatefulWidget {
 
 class _PassRegisterState extends State<PassRegister> {
 
-  bool _obscureText = true;
+  bool _revealText = true;
 
-  final TextEditingController _itemNameController = GetIt.I<TextEditingController>();
+  final TextEditingController _itemNameController = TextEditingController();
   final TextEditingController _emailController = GetIt.I<TextEditingController>();
   final TextEditingController _usernameController = GetIt.I<TextEditingController>();
   final TextEditingController _nicknameController = GetIt.I<TextEditingController>();
@@ -76,35 +76,24 @@ class _PassRegisterState extends State<PassRegister> {
             ),
             SizedBox(
               width: width,
-              child: BlocListener<PasswordBloc, PasswordState>(
-                listener: (context, state){
-                  if(state is PasswordSelected){
-                    _itemNameController.text = state.passwordSelection!
-                        .itemNamePass!;
-                  } else if (state is PasswordRegistered ||
-                      state is PasswordEditCancelled){
-                    _itemNameController.text = '';
-                  }
-                },
-                child: PassTextField(
-                  label: 'Item Name',
-                  suffixWidget: IconButton(
-                    onPressed: (){
-                      _showAboutInfo(itemAbout);
-                    },
-                    icon: const Icon(Icons.info_outline),
-                    splashColor: Colors.transparent,
-                  ),
-                  validator: (value) {
-                    return validateTextfield(value == null || value.trim().isEmpty,
-                        'Please enter the item name');
+              child: PassTextField(
+                label: 'Item Name',
+                suffixWidget: IconButton(
+                  onPressed: (){
+                    _showAboutInfo(itemAbout);
                   },
-                  onChange: (value){
-                    context.read<PasswordBloc>()
-                        .add(FillItemNameEvent(itemName: value));
-                  },
-                  textEditingController: _itemNameController,
+                  icon: const Icon(Icons.info_outline),
+                  splashColor: Colors.transparent,
                 ),
+                validator: (value) {
+                  return validateTextfield(value == null || value.trim().isEmpty,
+                      'Please enter the item name');
+                },
+                onChange: (value){
+                  context.read<PassRegisterBloc>()
+                      .add(FillItemNameEvent(itemName: value));
+                },
+                textEditingController: _itemNameController,
               ),
             ),
             SizedBox(
@@ -112,48 +101,32 @@ class _PassRegisterState extends State<PassRegister> {
             ),
             SizedBox(
               width: width,
-              child: BlocListener<PasswordBloc, PasswordState>(
-                listener: (context, state){
-                  if(state is PassTypeFilled){
-                    _passTypeToValidator = state.passtType;
+              child: PassTextField(
+                textEditingController: _emailController,
+                label: 'E-mail',
+                keyboardType: TextInputType.emailAddress,
+                validator: (value) {
+
+                  bool isNotValid = false;
+                  String msg = '';
+
+                  if(_passTypeToValidator
+                      == PassType.email && (value == null ||
+                      value.trim().isEmpty)){
+                    isNotValid = true;
+                    msg = 'Please enter your e-mail';
+                  } else if ((value != null &&
+                      value.trim().isNotEmpty) && !value.contains('@')){
+                    msg = 'Please enter a valid e-mail';
+                    isNotValid = true;
                   }
 
-                  if(state is PasswordSelected){
-                    _emailController.text = state.passwordSelection!
-                        .email!;
-                  } else if (state is PasswordRegistered ||
-                      state is PasswordEditCancelled){
-                    _emailController.text = '';
-                  }
-
+                  return validateTextfield(isNotValid, msg);
                 },
-                child: PassTextField(
-                  textEditingController: _emailController,
-                  label: 'E-mail',
-                  keyboardType: TextInputType.emailAddress,
-                  validator: (value) {
-
-                    bool isNotValid = false;
-                    String msg = '';
-
-                    if(_passTypeToValidator
-                        == PassType.email && (value == null ||
-                        value.trim().isEmpty)){
-                      isNotValid = true;
-                      msg = 'Please enter your e-mail';
-                    } else if ((value != null &&
-                        value.trim().isNotEmpty) && !value.contains('@')){
-                      msg = 'Please enter a valid e-mail';
-                      isNotValid = true;
-                    }
-
-                    return validateTextfield(isNotValid, msg);
-                  },
-                  onChange: (value){
-                    context.read<PasswordBloc>()
-                        .add(FillEmailEvent(email: value));
-                  },
-                ),
+                onChange: (value){
+                  context.read<PassRegisterBloc>()
+                      .add(FillEmailEvent(email: value));
+                },
               ),
             ),
             SizedBox(
@@ -161,30 +134,20 @@ class _PassRegisterState extends State<PassRegister> {
             ),
             SizedBox(
               width: width,
-              child: BlocListener<PasswordBloc, PasswordState>(
-                listener: (context, state){
-                  if(state is PasswordSelected){
-                    _usernameController.text = state.passwordSelection!.username!;
-                  } else if (state is PasswordRegistered ||
-                      state is PasswordEditCancelled){
-                    _usernameController.text = '';
-                  }
-                },
-                child: PassTextField(
-                  textEditingController: _usernameController,
-                  label: 'Username',
-                  suffixWidget: IconButton(
-                    onPressed: (){
-                      _showAboutInfo(usernameAbout);
-                    },
-                    icon: const Icon(Icons.info_outline),
-                    splashColor: Colors.transparent,
-                  ),
-                  onChange: (value){
-                    context.read<PasswordBloc>()
-                        .add(FillUsernameEvent(username: value));
+              child: PassTextField(
+                textEditingController: _usernameController,
+                label: 'Username',
+                suffixWidget: IconButton(
+                  onPressed: (){
+                    _showAboutInfo(usernameAbout);
                   },
+                  icon: const Icon(Icons.info_outline),
+                  splashColor: Colors.transparent,
                 ),
+                onChange: (value){
+                  context.read<PassRegisterBloc>()
+                      .add(FillUsernameEvent(username: value));
+                },
               ),
             ),
             SizedBox(
@@ -192,44 +155,29 @@ class _PassRegisterState extends State<PassRegister> {
             ),
             SizedBox(
               width: width,
-              child: BlocListener<PasswordBloc, PasswordState>(
-                listener: (context, state){
-
-                  if(state is PassTypeFilled){
-                    _passTypeToValidator = state.passtType;
-                  }
-
-                  if(state is PasswordSelected){
-                    _nicknameController.text = state.passwordSelection!.username!;
-                  } else if (state is PasswordRegistered ||
-                      state is PasswordEditCancelled){
-                    _nicknameController.text = '';
-                  }
-                },
-                child: PassTextField(
-                  textEditingController: _nicknameController,
-                  label: 'Nickname',
-                  suffixWidget: IconButton(
-                    onPressed: (){
-                      _showAboutInfo(nicknameAbout);
-                    },
-                    icon: const Icon(Icons.info_outline),
-                    splashColor: Colors.transparent,
-                  ),
-                  validator: (value) {
-                    bool isNotValid = _passTypeToValidator == PassType.game
-                        && (value == null || value.trim().isEmpty);
-
-                    return validateTextfield(
-                        isNotValid,
-                        'Please enter your nickname in game'
-                    );
+              child: PassTextField(
+                textEditingController: _nicknameController,
+                label: 'Nickname',
+                suffixWidget: IconButton(
+                  onPressed: (){
+                    _showAboutInfo(nicknameAbout);
                   },
-                  onChange: (value){
-                    context.read<PasswordBloc>()
-                        .add(FillNicknameEvent(nickname: value));
-                  },
+                  icon: const Icon(Icons.info_outline),
+                  splashColor: Colors.transparent,
                 ),
+                validator: (value) {
+                  bool isNotValid = _passTypeToValidator == PassType.game
+                      && (value == null || value.trim().isEmpty);
+
+                  return validateTextfield(
+                      isNotValid,
+                      'Please enter your nickname in game'
+                  );
+                },
+                onChange: (value){
+                  context.read<PassRegisterBloc>()
+                      .add(FillNicknameEvent(nickname: value));
+                },
               ),
             ),
             SizedBox(
@@ -237,24 +185,14 @@ class _PassRegisterState extends State<PassRegister> {
             ),
             SizedBox(
               width: width,
-              child: BlocListener<PasswordBloc, PasswordState>(
-                listener: (context, state){
-                  if(state is PasswordSelected){
-                    _idController.text = state.passwordSelection!.numId!;
-                  } else if (state is PasswordRegistered ||
-                      state is PasswordEditCancelled){
-                    _idController.text = '';
-                  }
+              child: PassTextField(
+                textEditingController: _idController,
+                label: 'ID',
+                keyboardType: TextInputType.number,
+                onChange: (value){
+                  context.read<PassRegisterBloc>()
+                      .add(FillNumIdEvent(numId: value));
                 },
-                child: PassTextField(
-                  textEditingController: _idController,
-                  label: 'ID',
-                  keyboardType: TextInputType.number,
-                  onChange: (value){
-                    context.read<PasswordBloc>()
-                        .add(FillNumIdEvent(numId: value));
-                  },
-                ),
               ),
             ),
             SizedBox(
@@ -262,24 +200,14 @@ class _PassRegisterState extends State<PassRegister> {
             ),
             SizedBox(
               width: width,
-              child: BlocListener<PasswordBloc, PasswordState>(
-                listener: (context, state){
-                  if(state is PasswordSelected){
-                    _pinController.text = state.passwordSelection!.pin!;
-                  } else if (state is PasswordRegistered ||
-                      state is PasswordEditCancelled){
-                    _pinController.text = '';
-                  }
-                },
-                child: PassTextField(
+              child: PassTextField(
                   textEditingController: _pinController,
                   label: 'Pin',
                   keyboardType: TextInputType.number,
                   onChange: (value){
-                    context.read<PasswordBloc>()
+                    context.read<PassRegisterBloc>()
                         .add(FillPinEvent(pin: value));
                   }
-                ),
               ),
             ),
             SizedBox(
@@ -287,43 +215,39 @@ class _PassRegisterState extends State<PassRegister> {
             ),
             SizedBox(
               width: width,
-              child: BlocListener<PasswordBloc, PasswordState>(
-                listener: (context, state){
-                  if(state is PasswordSelected){
-                    _passwordController.text = state.passwordSelection!
-                        .password!;
-                  } else if (state is PasswordRegistered ||
-                      state is PasswordEditCancelled){
-                    _passwordController.text = '';
+              child: BlocBuilder<PassRegisterBloc, PassRegisterState>(
+                builder: (context, state){
+
+                  if(state is PasswordTextRevealed){
+                    _revealText = state.revealText!;
                   }
 
-                  if(state is PasswordTextObscured){
-                    _obscureText = state.isObscured!;
-                  }
+                  return PassTextField(
+                    textEditingController: _passwordController,
+                    label: 'Password',
+                    obscureText: _revealText,
+                    suffixWidget: IconButton(
+                        onPressed: (){
+                          context.read<PassRegisterBloc>()
+                              .add(RevealPasswordTextEvent(
+                                revealText: !_revealText)
+                          );
+                        },
+                        splashColor: Colors.transparent,
+                        icon: Icon(_revealText ? Icons.visibility
+                            : Icons.visibility_off
+                        )
+                    ),
+                    validator: (value) {
+                      return value == null || value.trim().isEmpty ?
+                      'Please enter your password' : null;
+                    },
+                    onChange: (value){
+                      context.read<PassRegisterBloc>()
+                          .add(FillPasswordEvent(password: value));
+                    },
+                  );
                 },
-                child: PassTextField(
-                  textEditingController: _passwordController,
-                  label: 'Password',
-                  obscureText: _obscureText,
-                  suffixWidget: IconButton(
-                      onPressed: (){
-                        context.read<PasswordBloc>()
-                            .add(SeePasswordTextEvent(isObscured: _obscureText));
-                      },
-                      splashColor: Colors.transparent,
-                      icon: Icon(_obscureText ? Icons.visibility
-                          : Icons.visibility_off
-                      )
-                  ),
-                  validator: (value) {
-                    return value == null || value.trim().isEmpty ?
-                    'Please enter your password' : null;
-                  },
-                  onChange: (value){
-                    context.read<PasswordBloc>()
-                        .add(FillPasswordEvent(password: value));
-                  },
-                ),
               ),
             ),
             SizedBox(

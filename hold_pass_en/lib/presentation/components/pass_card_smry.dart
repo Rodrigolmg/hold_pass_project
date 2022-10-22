@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:hold_pass_en/domain/entities/password.dart';
-import 'package:hold_pass_en/presentation/bloc/password/password_bloc.dart';
+import 'package:hold_pass_en/presentation/bloc/password/information/pass_information_bloc.dart';
 import 'package:hold_pass_en/presentation/components/pass_card_alert.dart';
 import 'package:hold_pass_en/presentation/components/pass_card_info.dart';
 import 'package:hold_pass_en/core/util/action_type.dart';
@@ -113,8 +113,6 @@ class _PassCardSmryState extends State<PassCardSmry>
                 ),
                 IconButton(
                     onPressed: (){
-                      // passProvider
-                      //     .setPasswordToDelete(widget.password!);
                       showGeneralDialog(
                           context: context,
                           pageBuilder: (context, a1, a2) => Container(),
@@ -127,10 +125,10 @@ class _PassCardSmryState extends State<PassCardSmry>
                                   actionType: ActionType.delete,
                                   password: widget.password!,
                                   callback: () {
-                                    context.read<PasswordBloc>().
-                                        add(DeletePasswordEvent(
-                                          passToDelete: widget.password!
-                                        )
+                                    context.read<PassInformationBloc>().
+                                      add(DeletePasswordEvent(
+                                        passToDelete: widget.password!
+                                      )
                                     );
                                     widget.reloadListCallback!();
                                   }

@@ -2,8 +2,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hold_pass_en/presentation/bloc/password/password_bloc.dart';
 import 'package:hold_pass_en/core/util/pass_type.dart';
+import 'package:hold_pass_en/presentation/bloc/password/register/pass_register_bloc.dart';
 
 class PassTypeList extends StatelessWidget {
 
@@ -11,7 +11,7 @@ class PassTypeList extends StatelessWidget {
 
   PassType? _passType = PassType.email;
 
-  void _getPassTypeValue(context, PasswordState state){
+  void _getPassTypeValue(context, PassRegisterState state){
     if(state is PassTypeFilled){
       _passType = const PassTypeFilled().passtType;
     } else {
@@ -36,7 +36,7 @@ class PassTypeList extends StatelessWidget {
         ),
         SizedBox(
           height: height * .08,
-          child: BlocListener<PasswordBloc, PasswordState>(
+          child: BlocListener<PassRegisterBloc, PassRegisterState>(
             listener: _getPassTypeValue,
             child: DropdownButton<PassType>(
                 underline: Container(
@@ -114,7 +114,7 @@ class PassTypeList extends StatelessWidget {
                     ),
                   )
                 ],
-                onChanged: (passType) => context.read<PasswordBloc>()
+                onChanged: (passType) => context.read<PassRegisterBloc>()
                     .add(SelectPassTypeEvent(passType: passType!))
             ),
           ),

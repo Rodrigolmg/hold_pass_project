@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:get_it/get_it.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hold_pass_en/presentation/bloc/home/home_bloc.dart';
-import 'package:hold_pass_en/presentation/bloc/password/password_bloc.dart';
+import 'package:hold_pass_en/presentation/bloc/password/information/pass_information_bloc.dart';
+import 'package:hold_pass_en/presentation/bloc/password/register/pass_register_bloc.dart';
 import 'package:hold_pass_en/presentation/pages/splash.dart';
 import 'inject_container.dart' as di;
 
@@ -15,8 +15,11 @@ void main() async {
   runApp(
     MultiBlocProvider(
       providers: [
-        BlocProvider<PasswordBloc>(
-          create: (c) => PasswordBloc()
+        BlocProvider<PassInformationBloc>(
+          create: (c) => PassInformationBloc()
+        ),
+        BlocProvider<PassRegisterBloc>(
+          create: (c) => PassRegisterBloc()
         ),
         BlocProvider<HomeBloc>(
           create: (c) => HomeBloc()
