@@ -149,25 +149,3 @@ class EditPasswordEvent extends PassRegisterEvent{
   List<Object?> get props => [passReadyToUpdate];
 
 }
-
-
-// PASSWORD FIELD OBSCURE EVENT
-class RevealPasswordTextEvent extends PassRegisterEvent{
-
-  final bool? revealText;
-
-  const RevealPasswordTextEvent({required this.revealText});
-
-  @override
-  List<Object?> get props => [revealText];
-
-}
-
-class ObscurePasswordTextEvent extends PassRegisterEvent{
-
-  const ObscurePasswordTextEvent();
-
-  @override
-  List<Object?> get props => [];
-
-}

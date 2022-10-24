@@ -30,6 +30,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
     on<SelectPassToEditEvent>(_onPassToEditSelected);
     on<CancelPasswordEditEvent>(_onCancelPasswordEdit);
+    on<RevealPasswordTextEvent>(_onPasswordFielRevealed);
   }
 
   void _onPassToEditSelected(SelectPassToEditEvent event, Emitter emit){
@@ -45,6 +46,12 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   void _onCancelPasswordEdit(CancelPasswordEditEvent event, Emitter emit){
     emit(
         PasswordEditCancelled(iconHeight: event.iconHeight)
+    );
+  }
+
+  void _onPasswordFielRevealed(RevealPasswordTextEvent event, Emitter emit){
+    emit(
+        PasswordTextRevealed(revealText: event.revealText)
     );
   }
 

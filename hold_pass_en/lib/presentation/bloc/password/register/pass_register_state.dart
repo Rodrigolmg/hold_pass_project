@@ -153,24 +153,3 @@ class PasswordEdited extends PassRegisterState {
 }
 
 
-// PASSWORD FIELD OBSCURE STATES
-class PasswordTextRevealed extends PassRegisterState{
-
-  final bool? revealText;
-
-  const PasswordTextRevealed({required this.revealText});
-
-  @override
-  List<Object?> get props => [revealText];
-
-}
-
-class PasswordTextObscured extends PassRegisterState{
-
-  const PasswordTextObscured();
-
-  @override
-  List<Object?> get props => [];
-
-}
-

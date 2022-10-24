@@ -44,8 +44,35 @@ class _HomeState extends State<Home>{
     double height = MediaQuery.of(context).size.height;
 
     return SafeArea(
-        child: BlocListener<PassRegisterBloc, PassRegisterState>(
-          listener: _fillPassFields,
+        child: MultiBlocListener(
+          listeners: [
+            BlocListener<PassRegisterBloc, PassRegisterState>(
+                listener: _fillPassFields
+            ),
+            BlocListener<HomeBloc, HomeState>(
+                listener: (context, state){
+                  if(state is PasswordSelected){
+                    _pageController.animateToPage(
+                      state.pageIndex,
+                      duration: const Duration(milliseconds: 850),
+                      curve: Curves.decelerate
+                    );
+
+                    if(state.iconHeightValue == .0){
+                      Timer(const Duration(milliseconds: 450), () {
+                        context.read<HomeBloc>().add(
+                          SelectPassToEditEvent(
+                            passSelected: state.passwordSelection,
+                            offset: state.offset,
+                            iconHeight: 25.0
+                          ));
+                      });
+                    }
+
+                  }
+                }
+            ),
+          ],
           child: Stack(
             children: [
               Scaffold(
@@ -205,10 +232,7 @@ class _HomeState extends State<Home>{
 
   List<Widget> _getPages(){
     return [
-      Form(
-        key: _formKey,
-        child: const PassRegister()
-      ),
+      PassRegister(formKey: _formKey),
       const PassInformation()
     ];
   }

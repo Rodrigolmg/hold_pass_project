@@ -22,8 +22,7 @@ class PassRegisterBloc extends Bloc<PassRegisterEvent, PassRegisterState> {
     on<RegisterPasswordEvent>(_onPasswordRegister);
     on<ConfirmPasswordEditEvent>(_onConfirmPasswordToEdit);
     on<EditPasswordEvent>(_onPasswordEdit);
-    on<RevealPasswordTextEvent>(_onPasswordFielRevealed);
-    on<ObscurePasswordTextEvent>(_onPasswordFielObscured);
+
   }
 
   void _onSelectingPassType(SelectPassTypeEvent event, Emitter emit){
@@ -101,18 +100,6 @@ class PassRegisterBloc extends Bloc<PassRegisterEvent, PassRegisterState> {
   void _onPasswordEdit(EditPasswordEvent event, Emitter emit){
     emit(
         PasswordEdited(passwordEdited: event.passReadyToUpdate)
-    );
-  }
-
-  void _onPasswordFielRevealed(RevealPasswordTextEvent event, Emitter emit){
-    emit(
-      PasswordTextRevealed(revealText: event.revealText)
-    );
-  }
-
-  void _onPasswordFielObscured(ObscurePasswordTextEvent event, Emitter emit){
-    emit(
-        const PasswordTextObscured()
     );
   }
 

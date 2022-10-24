@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:hold_pass_en/domain/entities/password.dart';
 import 'package:hold_pass_en/presentation/bloc/home/home_bloc.dart';
@@ -85,12 +87,12 @@ class PassCardInfo extends StatelessWidget {
           )
         ),
         TextButton(
-            onPressed: (){
+            onPressed: () {
               context.read<HomeBloc>().add(
                 SelectPassToEditEvent(
                   passSelected: password!,
                   offset: .0,
-                  iconHeight: 0
+                  iconHeight: .0
                 )
               );
               Navigator.of(context).pop();

@@ -74,5 +74,16 @@ class CancelPasswordEditEvent extends HomeEvent{
 
 }
 
+class RevealPasswordTextEvent extends HomeEvent{
+
+  final bool? revealText;
+
+  const RevealPasswordTextEvent({required this.revealText});
+
+  @override
+  List<Object?> get props => [revealText];
+
+}
+
 
 

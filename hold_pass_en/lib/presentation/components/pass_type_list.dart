@@ -13,7 +13,7 @@ class PassTypeList extends StatelessWidget {
 
   void _getPassTypeValue(context, PassRegisterState state){
     if(state is PassTypeFilled){
-      _passType = const PassTypeFilled().passtType;
+      _passType = state.passtType;
     } else {
       _passType = PassType.email;
     }
@@ -36,87 +36,91 @@ class PassTypeList extends StatelessWidget {
         ),
         SizedBox(
           height: height * .08,
-          child: BlocListener<PassRegisterBloc, PassRegisterState>(
-            listener: _getPassTypeValue,
-            child: DropdownButton<PassType>(
-                underline: Container(
-                  height: .8,
-                  color: Colors.orangeAccent,
-                ),
-                value: _passType,
-                isExpanded: true,
-                icon: const Icon(
-                  Icons.arrow_downward,
-                  size: 20,
-                ),
-                items: [
-                  DropdownMenuItem<PassType>(
-                    value: PassType.email,
-                    child: Row(
-                      children: [
-                        const Icon(Icons.alternate_email),
-                        SizedBox(
-                          width: width * .08,
-                        ),
-                        const Text('E-mail'),
-                      ],
-                    ),
+          child: BlocBuilder<PassRegisterBloc, PassRegisterState>(
+            builder: (context, state){
+
+              _getPassTypeValue(context, state);
+
+              return DropdownButton<PassType>(
+                  underline: Container(
+                    height: .8,
+                    color: Colors.orangeAccent,
                   ),
-                  DropdownMenuItem<PassType>(
-                    value: PassType.website,
-                    child: Row(
-                      children: [
-                        const Icon(
-                          Icons.http,
-                          size: 25,
-                        ),
-                        SizedBox(
-                          width: width * .08,
-                        ),
-                        const Text('Website'),
-                      ],
-                    ),
+                  value: _passType,
+                  isExpanded: true,
+                  icon: const Icon(
+                    Icons.arrow_downward,
+                    size: 20,
                   ),
-                  DropdownMenuItem<PassType>(
-                    value: PassType.app,
-                    child: Row(
-                      children: [
-                        const Icon(Icons.phone_android),
-                        SizedBox(
-                          width: width * .08,
-                        ),
-                        const Text('App'),
-                      ],
+                  items: [
+                    DropdownMenuItem<PassType>(
+                      value: PassType.email,
+                      child: Row(
+                        children: [
+                          const Icon(Icons.alternate_email),
+                          SizedBox(
+                            width: width * .08,
+                          ),
+                          const Text('E-mail'),
+                        ],
+                      ),
                     ),
-                  ),
-                  DropdownMenuItem<PassType>(
-                    value: PassType.game,
-                    child: Row(
-                      children: [
-                        const Icon(Icons.videogame_asset),
-                        SizedBox(
-                          width: width * .08,
-                        ),
-                        const Text('Game'),
-                      ],
+                    DropdownMenuItem<PassType>(
+                      value: PassType.website,
+                      child: Row(
+                        children: [
+                          const Icon(
+                            Icons.http,
+                            size: 25,
+                          ),
+                          SizedBox(
+                            width: width * .08,
+                          ),
+                          const Text('Website'),
+                        ],
+                      ),
                     ),
-                  ),
-                  DropdownMenuItem<PassType>(
-                    value: PassType.other,
-                    child: Row(
-                      children: [
-                        const Icon(Icons.question_mark),
-                        SizedBox(
-                          width: width * .08,
-                        ),
-                        const Text('Other'),
-                      ],
+                    DropdownMenuItem<PassType>(
+                      value: PassType.app,
+                      child: Row(
+                        children: [
+                          const Icon(Icons.phone_android),
+                          SizedBox(
+                            width: width * .08,
+                          ),
+                          const Text('App'),
+                        ],
+                      ),
                     ),
-                  )
-                ],
-                onChanged: (passType) => context.read<PassRegisterBloc>()
-                    .add(SelectPassTypeEvent(passType: passType!))
-            ),
+                    DropdownMenuItem<PassType>(
+                      value: PassType.game,
+                      child: Row(
+                        children: [
+                          const Icon(Icons.videogame_asset),
+                          SizedBox(
+                            width: width * .08,
+                          ),
+                          const Text('Game'),
+                        ],
+                      ),
+                    ),
+                    DropdownMenuItem<PassType>(
+                      value: PassType.other,
+                      child: Row(
+                        children: [
+                          const Icon(Icons.question_mark),
+                          SizedBox(
+                            width: width * .08,
+                          ),
+                          const Text('Other'),
+                        ],
+                      ),
+                    )
+                  ],
+                  onChanged: (passType) => context.read<PassRegisterBloc>()
+                      .add(SelectPassTypeEvent(passType: passType!))
+              );
+            },
           ),
         )
       ],

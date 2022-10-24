@@ -66,7 +66,7 @@ class PasswordSelected extends HomeState {
   bool get isEditing => passwordSelection != null;
 
   @override
-  List<Object> get props => [passwordSelection!.id!, offset!, iconHeight];
+  List<Object> get props => [iconHeight];
 
 
   @override
@@ -99,6 +99,23 @@ class PasswordEditCancelled extends HomeState {
 
   @override
   double get iconHeightValue => iconHeight;
+
+  @override
+  int get pageIndex => 0;
+
+}
+
+class PasswordTextRevealed extends HomeState{
+
+  final bool? revealText;
+
+  const PasswordTextRevealed({required this.revealText});
+
+  @override
+  List<Object?> get props => [revealText];
+
+  @override
+  double get iconHeightValue => 25.0;
 
   @override
   int get pageIndex => 0;
