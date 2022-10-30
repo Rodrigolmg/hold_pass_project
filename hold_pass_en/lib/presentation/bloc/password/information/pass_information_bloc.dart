@@ -5,7 +5,9 @@ import 'package:equatable/equatable.dart';
 import 'package:get_it/get_it.dart';
 import 'package:hold_pass_en/core/util/pass_type.dart';
 import 'package:hold_pass_en/domain/entities/password.dart';
+import 'package:hold_pass_en/domain/usecases/delete_password_usecase.dart';
 import 'package:hold_pass_en/domain/usecases/get_passwords_usecase.dart';
+import 'package:hold_pass_en/domain/usecases/register_password_usecase.dart';
 import 'package:hold_pass_en/domain/usecases/usecase.dart';
 
 part 'pass_information_event.dart';
@@ -21,6 +23,7 @@ class PassInformationBloc extends Bloc<PassInformationEvent, PassInformationStat
     on<PasswordListLoadedEvent>(_onPasswordsLoaded);
     on<EmptyPasswordListEvent>(_onEmptyPasswordList);
     on<DeletePasswordEvent>(_onPasswordDelete);
+    on<UndonePasswordDeleteEvent>(_onUndonePasswordDelete);
   }
 
   void _onLoadingPasswordList(LoadPasswordListEvent event, Emitter emit) async {
@@ -50,11 +53,22 @@ class PassInformationBloc extends Bloc<PassInformationEvent, PassInformationStat
   }
 
   void _onPasswordDelete(DeletePasswordEvent event, Emitter emit){
+    _useCase = GetIt.I.get<DeletePasswordUsecase>();
+    _useCase!(event.passToDelete);
     emit(
         PasswordDeleted(passwordDeleted: event.passToDelete)
     );
   }
 
+  void _onUndonePasswordDelete(UndonePasswordDeleteEvent event, Emitter emit){
+    _useCase = GetIt.I.get<RegisterPasswordUsecase>();
+    _useCase!(event.passwordDeletedToRestore);
+    emit(
+      UndonePasswordDelete(
+        passwordDeletedToRestore: event.passwordDeletedToRestore
+      )
+    );
+  }
 }
 
 

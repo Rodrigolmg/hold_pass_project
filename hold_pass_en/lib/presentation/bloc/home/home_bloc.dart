@@ -31,6 +31,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     on<SelectPassToEditEvent>(_onPassToEditSelected);
     on<CancelPasswordEditEvent>(_onCancelPasswordEdit);
     on<RevealPasswordTextEvent>(_onPasswordFielRevealed);
+    on<PasswordAuthenticationSelectEvent>(_onPasswordAuthSelect);
   }
 
   void _onPassToEditSelected(SelectPassToEditEvent event, Emitter emit){
@@ -52,6 +53,12 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   void _onPasswordFielRevealed(RevealPasswordTextEvent event, Emitter emit){
     emit(
         PasswordTextRevealed(revealText: event.revealText)
+    );
+  }
+
+  void _onPasswordAuthSelect(PasswordAuthenticationSelectEvent event, Emitter emit){
+    emit(
+        PasswordAuthenticationSelected(isAuth: event.isAuth)
     );
   }
 

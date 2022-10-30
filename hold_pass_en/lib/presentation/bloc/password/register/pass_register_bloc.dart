@@ -1,13 +1,20 @@
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:get_it/get_it.dart';
+import 'package:hold_pass_en/core/util/pass_converter.dart';
 import 'package:hold_pass_en/core/util/pass_type.dart';
 import 'package:hold_pass_en/domain/entities/password.dart';
+import 'package:hold_pass_en/domain/usecases/register_password_usecase.dart';
+import 'package:hold_pass_en/domain/usecases/usecase.dart';
 
 part 'pass_register_event.dart';
 part 'pass_register_state.dart';
 
 class PassRegisterBloc extends Bloc<PassRegisterEvent, PassRegisterState> {
+
+  UseCase? _useCase;
+
   PassRegisterBloc() : super(PassRegisterInitial()) {
     on<SelectPassTypeEvent>(_onSelectingPassType);
     on<FillItemNameEvent>(_onItemNameFilled);
@@ -86,6 +93,8 @@ class PassRegisterBloc extends Bloc<PassRegisterEvent, PassRegisterState> {
   }
 
   void _onPasswordRegister(RegisterPasswordEvent event, Emitter emit){
+    _useCase = GetIt.I<RegisterPasswordUsecase>();
+    _useCase!(PassConverter.convertPassToModel(event.passReadyToRegister!));
     emit(
         PasswordRegistered(passwordRegistered: event.passReadyToRegister)
     );

@@ -48,5 +48,14 @@ class PasswordDeleted extends PassInformationState {
   List<Object> get props => [passwordDeleted!.id!];
 }
 
-//TODO: UNDONE DELETE STATE
+class UndonePasswordDelete extends PassInformationState {
+
+  final Password? passwordDeletedToRestore;
+
+  const UndonePasswordDelete({this.passwordDeletedToRestore});
+
+  @override
+  List<Object?> get props => [passwordDeletedToRestore];
+
+}
 

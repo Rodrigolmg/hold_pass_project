@@ -9,7 +9,6 @@ import 'package:hold_pass_en/presentation/components/pass_type_list.dart';
 import 'package:hold_pass_en/core/util/pass_type.dart';
 import 'package:hold_pass_en/core/util/textfield_about.dart';
 import 'package:hold_pass_en/core/util/textfield_validator.dart';
-import 'package:hold_pass_en/presentation/pages/home.dart';
 
 class PassRegister extends StatefulWidget {
 
@@ -36,6 +35,8 @@ class _PassRegisterState extends State<PassRegister> {
   final TextEditingController _pinController = GetIt.I<TextEditingController>();
   final TextEditingController _passwordController = GetIt.I<TextEditingController>();
 
+  bool _isAuth = false;
+
   PassType? _passTypeToValidator;
 
   void _showAboutInfo(String about) async {
@@ -59,10 +60,14 @@ class _PassRegisterState extends State<PassRegister> {
     final double width = MediaQuery.of(context).size.width * .8;
     final double height = MediaQuery.of(context).size.height;
 
-    void _textFieldBuilder(HomeState state){
+    void _valueBuilder(HomeState state){
 
       if(state is PasswordTextRevealed){
         _revealText = state.revealText!;
+      }
+
+      if(state is PasswordAuthenticationSelected){
+        _isAuth = state.isAuth;
       }
 
       if(state is PasswordSelected){
@@ -73,6 +78,7 @@ class _PassRegisterState extends State<PassRegister> {
         _idController.text = state.passwordSelection!.numId ?? '';
         _pinController.text = state.passwordSelection!.pin ?? '';
         _passwordController.text = state.passwordSelection!.password!;
+        _isAuth = state.passwordSelection!.isAuth;
       } else if(state is PasswordEditCancelled){
         _itemNameController.text = '';
         _emailController.text = '';
@@ -81,13 +87,14 @@ class _PassRegisterState extends State<PassRegister> {
         _idController.text = '';
         _pinController.text = '';
         _passwordController.text = '';
+        _isAuth = false;
       }
     }
 
     return BlocBuilder<HomeBloc, HomeState>(
       builder: (context, state) {
 
-        _textFieldBuilder(state);
+        _valueBuilder(state);
 
         return Form(
             key: widget.formKey!,
@@ -281,6 +288,41 @@ class _PassRegisterState extends State<PassRegister> {
                           context.read<PassRegisterBloc>()
                               .add(FillPasswordEvent(password: value));
                         },
+                      ),
+                    ),
+                    SizedBox(
+                      height: height * .02,
+                    ),
+                    SizedBox(
+                      width: width,
+                      child: Row(
+                        children: [
+                          const Text('It has authentication?'),
+                          Switch(
+                            value: _isAuth,
+                            onChanged: (value){
+                              context.read<PassRegisterBloc>().add(
+                                FillAuthEvent(isAuth: value)
+                              );
+
+                              context.read<HomeBloc>().add(
+                                PasswordAuthenticationSelectEvent(isAuth: value)
+                              );
+                            },
+                            activeColor: Colors.orangeAccent,
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(
+                              left: width * .172
+                            ),
+                            child: IconButton(
+                              onPressed: (){},
+                              icon: const Icon(Icons.info_outline),
+                              splashColor: Colors.transparent,
+                              color: Colors.black26,
+                            ),
+                          )
+                        ],
                       ),
                     ),
                     SizedBox(

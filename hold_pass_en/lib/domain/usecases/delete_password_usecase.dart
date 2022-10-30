@@ -11,7 +11,7 @@ class DeletePasswordUsecase implements UseCase<void, PasswordModel>{
 
   @override
   Future<void> call(PasswordModel pass) async {
-    await repository!.insert(pass);
+    await repository!.delete(pass);
   }
 
 }

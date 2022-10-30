@@ -46,3 +46,14 @@ class DeletePasswordEvent extends PassInformationEvent{
 
 }
 
+class UndonePasswordDeleteEvent extends PassInformationEvent{
+
+  final Password? passwordDeletedToRestore;
+
+  const UndonePasswordDeleteEvent({this.passwordDeletedToRestore});
+
+  @override
+  List<Object?> get props => throw UnimplementedError();
+
+}
+

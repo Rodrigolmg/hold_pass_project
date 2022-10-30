@@ -3,7 +3,7 @@ import 'package:hold_pass_en/domain/entities/password.dart';
 
 class PassConverter {
 
-  PasswordModel convertPassToModel(Password pass) => PasswordModel(
+  static PasswordModel convertPassToModel(Password pass) => PasswordModel(
     id: pass.id,
     passType: pass.passType,
     email: pass.email,
@@ -13,9 +13,9 @@ class PassConverter {
     pin: pass.pin,
     numId: pass.numId,
     password: pass.password,
-    isAuth: pass.isAuth!
+    isAuth: pass.isAuth
   );
 
-  Password convertPassToEntity(PasswordModel pass) => pass;
+  static Password convertPassToEntity(PasswordModel pass) => pass;
 
 }

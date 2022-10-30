@@ -85,5 +85,15 @@ class RevealPasswordTextEvent extends HomeEvent{
 
 }
 
+class PasswordAuthenticationSelectEvent extends HomeEvent{
+
+  final bool isAuth;
+
+  const PasswordAuthenticationSelectEvent({required this.isAuth});
+
+  @override
+  List<Object?> get props => [isAuth];
+}
+
 
 

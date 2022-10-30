@@ -15,7 +15,7 @@ class Password extends Equatable{
   String? password;
   String? numId;
   String? pin;
-  bool? isAuth;
+  bool isAuth;
 
   Password({
     this.id,
@@ -27,7 +27,7 @@ class Password extends Equatable{
     this.password,
     this.numId,
     this.pin,
-    this.isAuth,
+    this.isAuth = false,
   });
 
 

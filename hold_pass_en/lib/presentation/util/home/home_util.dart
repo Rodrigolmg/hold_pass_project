@@ -23,16 +23,17 @@ class HomeUtil {
       ));
       Timer(const Duration(milliseconds: 450), () {
         context.read<HomeBloc>().add(
-            const RegisterPageSelectEvent(
-                iconHeight: 25.0
-            ));
+          const RegisterPageSelectEvent(
+              iconHeight: 25.0
+        ));
       });
     } else {
-
-      context.read<PassInformationBloc>().add(
-        const LoadPasswordListEvent(
-            passType: PassType.email
-      ));
+      Timer(const Duration(milliseconds: 450), () {
+        context.read<PassInformationBloc>().add(
+            const LoadPasswordListEvent(
+                passType: PassType.email
+            ));
+      });
 
       context.read<HomeBloc>().add(
         const InfoPageSelectEvent(
@@ -40,9 +41,9 @@ class HomeUtil {
       ));
       Timer(const Duration(milliseconds: 450), () {
         context.read<HomeBloc>().add(
-            const InfoPageSelectEvent(
-                iconHeight: 25.0
-            ));
+          const InfoPageSelectEvent(
+              iconHeight: 25.0
+        ));
       });
     }
   }

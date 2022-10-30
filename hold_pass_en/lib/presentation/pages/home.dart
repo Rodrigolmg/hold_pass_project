@@ -50,6 +50,7 @@ class _HomeState extends State<Home>{
                 listener: _fillPassFields
             ),
             BlocListener<HomeBloc, HomeState>(
+              listenWhen: (pS, cS) => cS is PasswordSelected,
                 listener: (context, state){
                   if(state is PasswordSelected){
                     _pageController.animateToPage(
@@ -94,8 +95,11 @@ class _HomeState extends State<Home>{
                         controller: _pageController,
                         scrollDirection: Axis.horizontal,
                         itemCount: _getPages().length,
-                        onPageChanged: state is PasswordSelected ?
-                        null : _homeUtil!.onPageChange,
+                        onPageChanged: (index) {
+                          if(state is! PasswordSelected){
+                            _homeUtil!.onPageChange(index);
+                          }
+                        },
                         itemBuilder: (_, i) => _getPages()[i]
                     );
                   },
@@ -112,13 +116,15 @@ class _HomeState extends State<Home>{
                             currentIndex: state.pageIndex,
                             selectedItemColor: Colors.orangeAccent,
                             unselectedItemColor: Colors.white60,
-                            onTap: state is PasswordSelected ? null : (index){
-                              if(index != state.pageIndex) {
-                                _pageController.animateToPage(
-                                    index,
-                                    duration: const Duration(milliseconds: 500),
-                                    curve: Curves.decelerate
-                                );
+                            onTap: (index){
+                              if(state is! PasswordSelected){
+                                if(index != state.pageIndex) {
+                                  _pageController.animateToPage(
+                                      index,
+                                      duration: const Duration(milliseconds: 500),
+                                      curve: Curves.decelerate
+                                  );
+                                }
                               }
                             },
                             items: const [
@@ -149,9 +155,9 @@ class _HomeState extends State<Home>{
                           return;
                         }
 
-                        // _doFunction(ActionType.register,
-                        //     context
-                        // );
+                        _doFunction(ActionType.register,
+                            context
+                        );
                       } else {
                         // _doFunction(ActionType.export, context);
                       }
@@ -208,7 +214,9 @@ class _HomeState extends State<Home>{
                           ),
                           onPressed: () async {
                             context.read<HomeBloc>().add(
-                                const CancelPasswordEditEvent(iconHeight: .0)
+                                const CancelPasswordEditEvent(
+                                  iconHeight: .0,
+                                )
                             );
                             Timer(const Duration(milliseconds: 450), () {
                               context.read<HomeBloc>().add(
@@ -240,16 +248,12 @@ class _HomeState extends State<Home>{
   void _doFunction(ActionType actionType, BuildContext context) {
     switch(actionType){
       case ActionType.register:
-        // context.read<PasswordBloc>().add(
-        //     ConfirmPasswordRegisterEvent(passToRegister: _passToRegister!)
-        // );
         _showDialog(
           _passToRegister,
           (){
-            // context.read<PasswordBloc>().add(RegisterPasswordEvent(
-            //     passReadyToRegister: _passToRegister!
-            // ));
-            // Reload event
+            context.read<PassRegisterBloc>().add(RegisterPasswordEvent(
+                passReadyToRegister: _passToRegister
+            ));
           }
         );
         break;

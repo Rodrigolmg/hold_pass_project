@@ -90,6 +90,13 @@ class PassCardAlert extends StatelessWidget {
               label: 'Password:',
               detail: password!.password
           ),
+          const SizedBox(
+            height: .5,
+          ),
+          PassInfoTile(
+            label: 'Has authentication:',
+            detail: password!.isAuth ? 'Yes' : 'No'
+          ),
         ],
       ),
       actions: [

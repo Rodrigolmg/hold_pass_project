@@ -121,3 +121,20 @@ class PasswordTextRevealed extends HomeState{
   int get pageIndex => 0;
 
 }
+
+class PasswordAuthenticationSelected extends HomeState{
+
+  final bool isAuth;
+
+  const PasswordAuthenticationSelected({required this.isAuth});
+
+  @override
+  double get iconHeightValue => 25.0;
+
+  @override
+  int get pageIndex => 0;
+
+  @override
+  List<Object?> get props => [isAuth];
+
+}
